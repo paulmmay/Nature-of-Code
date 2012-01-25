@@ -1,6 +1,6 @@
 /*
 
- Nature of Code - Experiments in Simple Motion: Falling with Gravity
+ Nature of Code - Experiments in Simple Motion: Walk
  
  24th January 2012
  
@@ -24,7 +24,7 @@ void setup() {
   allSliders.add(mySlider);
   //setupSlider takes these args
   //int _startWidth, int _startHeight, int _fillColor, int _sliderColor, int _maxVal, int _minVal, int _sliderVal, int _xPos, int _yPos, String label) 
-  mySlider.setupSlider(120, 10, 120, 200, 100, 0, 50, 50, 50, "Acceleration");
+  mySlider.setupSlider(120, 10, 120, 200, 100, 0, 50, 50, 50, "Maximum Step");
   mySlider.render();
   smooth();
   theBall = new Ball();
@@ -38,11 +38,14 @@ void draw() {
     s.update();
     s.render();
   }
-  theBall.ySpeed+=mySlider.sliderVal/500;
+  
+  //change the ball in some way
+  theBall.xPos+=random(-1*mySlider.sliderVal,mySlider.sliderVal);
+  theBall.yPos+=random(-1*mySlider.sliderVal,mySlider.sliderVal);
   theBall.update();
   theBall.render();
   
-  if(theBall.yPos > height+100){
+  if(abs(dist(theBall.xPos,theBall.yPos,width/2,height/2)) > width/2){
     theBall.create(width/2, 100, 0.1);
   }
   
