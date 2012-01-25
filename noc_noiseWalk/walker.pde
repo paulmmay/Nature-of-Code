@@ -22,11 +22,10 @@ class Walker {
   }
 
   void render() {
-    noStroke();
-    fill(colours[1]);
+
     location.add(velocity);
     //reset if we wander off screen
-    ellipse(location.x, location.y, 20, 20);
+
 
     //draw the wiggly footprint line
     beginShape();
@@ -36,6 +35,9 @@ class Walker {
       vertex(v.x, v.y); //never used this before, nifty
     }
     endShape();
+    noStroke();
+    fill(colours[1]);
+    ellipse(location.x, location.y, 20, 20);
   }
 
   void update() {
