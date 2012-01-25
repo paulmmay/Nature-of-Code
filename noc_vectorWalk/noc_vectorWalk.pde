@@ -24,7 +24,7 @@ void setup() {
   allSliders.add(mySlider);
   //setupSlider takes these args
   //int _startWidth, int _startHeight, int _fillColor, int _sliderColor, int _maxVal, int _minVal, int _sliderVal, int _xPos, int _yPos, String label) 
-  mySlider.setupSlider(120, 10, 120, 200, 100, 0, 50, 50, 50, "Curiosity");
+  mySlider.setupSlider(120, 10, 100, 200, 100, 0, 50, 50, 50, "Curiosity");
   mySlider.render();
   smooth();
   theWalker = new Walker();
@@ -38,9 +38,10 @@ void draw() {
     s.update();
     s.render();
   }
-  
 
+  theWalker.velocity.x=random(-1*mySlider.sliderVal/50,mySlider.sliderVal/50);
+  theWalker.velocity.y=random(-1*mySlider.sliderVal/50,mySlider.sliderVal/50);
   
+  theWalker.draw();
 }
-
 
