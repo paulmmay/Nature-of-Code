@@ -10,7 +10,7 @@ class Walker {
   PVector velocity;
   PVector offset;
   int tag;
-  ArrayList<PVector> footprints = new ArrayList();
+  //ArrayList<PVector> footprints = new ArrayList();
   ArrayList<Walker> allWalkers = new ArrayList();
 
   Walker() {
@@ -25,7 +25,6 @@ class Walker {
   }
 
   void render() {
-
     location.add(velocity);
     //reset if we wander off screen
 

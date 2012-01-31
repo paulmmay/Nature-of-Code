@@ -12,7 +12,7 @@
 Slider mySlider;
 ArrayList<Slider> allSliders = new ArrayList();
 color[] colours = {
-  #F2f2f2, #ADDAEA, #cccccc,#FAFAFA
+  #F2f2f2, #ADDAEA, #cccccc, #FAFAFA
 };
 
 ArrayList<Walker> allWalkers = new ArrayList();
@@ -22,16 +22,20 @@ ArrayList<Walker> allWalkers = new ArrayList();
 
 void setup() {
   //create three walkers
-  for (int i=0;i<=9;i++) {
+  for (int i=0;i<=2;i++) {
     Walker newWalker = new Walker();
     allWalkers.add(newWalker);
     newWalker.create(i);
   }
 
-  //add all the walkers into all the walkers - is this the best way to do it?
+  //add all the walkers into all the walkers - except for the walker of course.
   for (Walker w:allWalkers) {
-    //hmm...this is a pointer to the global list of walkers, need to add all walkers into the internal list of walkers. will come back to it. 
-    w.allWalkers = allWalkers;
+    for (Walker x:allWalkers) {
+      //only add other walkers
+      if (w != x) {
+        w.allWalkers.add(x);
+      }
+    }
   }
 
   size(700, 500);
@@ -60,7 +64,7 @@ void draw() {
   }
 }
 
-void keyPressed(){
+void keyPressed() {
   save(millis()+".png");
 }
 
