@@ -43,3 +43,6 @@ void draw() {
   theWalker.render();
 }
 
+void keyPressed(){
+  save(millis()+".png");
+}

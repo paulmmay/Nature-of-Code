@@ -80,3 +80,6 @@ class Ball {
   }
 }
 
+void keyPressed(){
+  save(millis()+".png");
+}

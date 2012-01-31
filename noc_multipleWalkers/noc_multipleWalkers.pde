@@ -22,7 +22,7 @@ ArrayList<Walker> allWalkers = new ArrayList();
 
 void setup() {
   //create three walkers
-  for (int i=0;i<=6;i++) {
+  for (int i=0;i<=9;i++) {
     Walker newWalker = new Walker();
     allWalkers.add(newWalker);
     newWalker.create(i);
@@ -58,5 +58,9 @@ void draw() {
     w.update();
     w.render();
   }
+}
+
+void keyPressed(){
+  save(millis()+".png");
 }
 
