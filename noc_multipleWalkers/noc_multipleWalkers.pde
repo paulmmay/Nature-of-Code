@@ -40,7 +40,7 @@ void setup() {
   allSliders.add(mySlider);
   //setupSlider takes these args
   //int _startWidth, int _startHeight, int _fillColor, int _sliderColor, int _maxVal, int _minVal, int _sliderVal, int _xPos, int _yPos, String label) 
-  mySlider.setupSlider(120, 10, 100, 200, 100, 0, 5, 50, 50, "Curiosity");
+  mySlider.setupSlider(120, 10, 100, 200, 100, 0, 5, 50, 50, "Noise");
   mySlider.render();
   smooth();
 }
