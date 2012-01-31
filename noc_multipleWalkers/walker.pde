@@ -34,6 +34,11 @@ class Walker {
     for (Walker w:allWalkers) {
       line(location.x, location.y, w.location.x, w.location.y); 
      // text(dist(location.x, location.y, w.location.x, w.location.y),location.x-10, location.y-20); //where to position distance
+     
+     //can we make a decision on what to do if we're too close to the other walkers?
+     if(dist(location.x, location.y, w.location.x, w.location.y) < 1){
+      println("bump between "+this+" and "+w); 
+     }
     }
 
     /*draw the wiggly footprint line
@@ -61,11 +66,11 @@ class Walker {
     location.y = map(noise(offset.y), 0, 1, 0, height);
     offset.add(mySlider.sliderVal/1000, mySlider.sliderVal/1000, 0); //add a little bit to the noise offset. 
 
-    //create a little trail behind the walker
+    /*create a little trail behind the walker
     footprints.add(location.get());
     if (footprints.size() > 2000) {
       footprints.remove(0);
-    }
+    }*/
   }
 }
 
