@@ -24,8 +24,6 @@ class Body {
 
   void render() {
 
-    
-
     //the dense core of our body
     fill(colours[4]);
     noStroke();
@@ -34,7 +32,7 @@ class Body {
     noFill();
     strokeWeight(1);
     stroke(colours[2]);
-    ellipse(location.x, location.y, range*2, range*2); //we doulbe range because ellipse uses width and not a radius
+    ellipse(location.x, location.y, range*2, range*2); //we double range because ellipse uses width and not a radius
   }
 }
 
