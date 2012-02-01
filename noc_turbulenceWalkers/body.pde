@@ -18,7 +18,7 @@ class Body {
 
 
   void update() {
-    range = 100;
+    range = 100; //effectively this is the radius
   }
 
 
@@ -34,7 +34,7 @@ class Body {
     noFill();
     strokeWeight(1);
     stroke(colours[2]);
-    ellipse(location.x, location.y, range, range);
+    ellipse(location.x, location.y, range*2, range*2); //we doulbe range because ellipse uses width and not a radius
   }
 }
 
