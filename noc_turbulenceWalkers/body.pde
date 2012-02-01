@@ -12,12 +12,13 @@ class Body {
 
   void create() {
     location = new PVector(400, 250);
+    velocity = new PVector(0.1,0.1);
     core = 5;
   }
 
 
   void update() {
-    range = mySlider.sliderVal*5;
+    range = 100;
   }
 
 
