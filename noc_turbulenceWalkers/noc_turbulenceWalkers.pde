@@ -20,7 +20,7 @@ ArrayList<Body> allBodies = new ArrayList();
 
 void setup() {
   //create three walkers
-  for (int i=0;i<=4;i++) {
+  for (int i=0;i<=3;i++) {
     Walker newWalker = new Walker();
     allWalkers.add(newWalker);
     newWalker.create(i);
@@ -40,7 +40,6 @@ void setup() {
   Body b = new Body();
   b.create();
   allBodies.add(b);
-
   size(700, 500);
   background(colours[0]);
   

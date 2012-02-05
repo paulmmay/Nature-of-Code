@@ -16,6 +16,7 @@ class Walker {
   ArrayList<Walker> allWalkers = new ArrayList();
   color fillColour;
   color textColour;
+  float mass;
 
   Walker() {
     println(this+" is alive");
@@ -23,12 +24,13 @@ class Walker {
 
   void create(int _tag) {
     tag = _tag;
-    location = new PVector(width/2, height/2);
+    location = new PVector(width/(random(1,4)), height/(random(1,4)));
     velocity = new PVector(0.5, 0.4);
     offset = new PVector(random(1000), random(1000));
     acceleration = new PVector(0, 0);
     fillColour = colours[1];
     textColour = 0;
+    mass = 1;
   }
 
   void render() {
@@ -56,12 +58,11 @@ class Walker {
       PVector dir = PVector.sub(body, location);
       //if we're within range of the body
       if (dir.mag() <= b.range) {
-        //println(dir.mag());
-        dir.normalize();
-        dir.mult(10);
-        acceleration = dir;
-        fillColour = colours[4];
-        textColour = colours[2];
+        //pass the mover into the body's attract function
+        PVector force = b.attract(this);
+        this.applyForce(force);
+            fillColour = colours[4];
+        textColour = colours[1]; ;
       }
       else {
         fillColour = colours[1];
@@ -75,6 +76,11 @@ class Walker {
       velocity.limit(10);
       location.add(velocity);
     }
+  }
+
+  void applyForce(PVector force) {
+    PVector f = PVector.div(force, mass);
+    acceleration.add(f);
   }
 }
 
