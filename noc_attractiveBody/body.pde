@@ -35,8 +35,7 @@ class Body {
 
     //constantly look at the distance of the walker to me
     PVector force = PVector.sub(location, w.location); //subtract the location of me and the walker
-    float distance = force.mag(); //how far away is the walker? get the magnitude of the vector
-
+    float distance = force.mag(); //how far away is the walker? get the magnitude of the vector 
     force.normalize(); //still not sure why this is needed, ask Dan Shiffman
     return(force);
   }

@@ -12,13 +12,13 @@ class Walker {
   void create(int _tag) {
     tag = _tag;
     location = new PVector(random(width), random(height));
-    velocity = new PVector(4, 3.5);
+    velocity = new PVector(2, 2);
     acceleration = new PVector(0, 0);
-    mass = 2.0;
+    mass = random(2,4);
   }
 
   void update() {
-     velocity.add(acceleration);
+    velocity.add(acceleration);
     location.add(velocity);
     acceleration.mult(0);
   }
@@ -33,8 +33,6 @@ class Walker {
     fill(0);
     text(tag, location.x-4, location.y+3);
   }
-
-
 
   void applyForce(PVector _force) {
     PVector f = PVector.div(_force, mass);

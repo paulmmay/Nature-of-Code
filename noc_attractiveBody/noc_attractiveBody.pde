@@ -11,7 +11,6 @@
 
 ArrayList<Body> allBodies;
 ArrayList<Walker> allWalkers;
-
 color[] colours = {
   #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8
 };
@@ -24,7 +23,7 @@ void setup() {
   b.create();
   allBodies.add(b);
   background(colours[0]);
-  for(int i=0;i<5;i++){
+  for(int i=0;i<10;i++){
   Walker w = new Walker();
   w.create(i);
   allWalkers.add(w);
@@ -45,6 +44,7 @@ void draw() {
       w.applyForce(force);
     }
   }
+
 }
 
 void keyPressed() {

@@ -1,8 +1,8 @@
 /*
 
- Nature of Code - Experiments in Simple Motion: Simple Attractive Body
+ Nature of Code - Experiments in Simple Motion: Falling Body with Poorly Programmed Gravity
  
- 4th February 2012
+ 6th February 2012
  
  Paul May
  paulmay.org
@@ -41,6 +41,7 @@ void draw() {
     f.update();
     f.render();
   }
+  //saveFrame("output/frame####.png");
 }
 
 void keyPressed() {
