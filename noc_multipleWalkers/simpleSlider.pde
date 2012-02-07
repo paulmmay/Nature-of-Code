@@ -2,7 +2,7 @@
 
  Simple Slider
  
- 24th January 2012
+ 6th January 2012
  
  Paul May
  paulmay.org
@@ -15,6 +15,7 @@ class Slider {
   int startHeight;
   color fillColor;
   int sliderColor;
+  float clickedVal;
   float sliderVal;
   float maxVal; 
   float minVal;
@@ -30,7 +31,7 @@ class Slider {
   }
 
   void update() {
-    fill(0,8,8);
+    fill(0, 8, 8);
     text(label+": "+sliderVal, xPos, yPos-startHeight/2);
     //if the mouse is inside
     if (mouseX>this.xPos & mouseX<this.xPos+startWidth & mouseY>this.yPos & mouseY<this.yPos+startHeight) {
@@ -43,37 +44,35 @@ class Slider {
     //is the mouse down
     if (mousePressed && inside == true) {
       //println("button click");
-      sliderVal = mouseX-xPos;
-      //println(this+" "+sliderVal);
+      clickedVal = mouseX-xPos; //the relative value of the mouse click to the position of the slider on the screen. we only care about the x val.
+      sliderVal = map(clickedVal,0,startWidth,minVal,maxVal); //map the position of the click inside the slider to our min and max vals
       render();
     }
   }
 
   void render() {
     noStroke();
-    pushMatrix();
-    translate(xPos, yPos);
     fill(fillColor);
-    rect(0, 0, startWidth, startHeight);
+    rect(xPos, yPos, startWidth, startHeight);
     fill(sliderColor);
-    rect(0, 0, sliderVal, startHeight); 
-    popMatrix();
+    rect(xPos, yPos, clickedVal, startHeight);
   }
 
-  void setupSlider(int _startWidth, int _startHeight, int _fillColor, int _sliderColor, float _maxVal, float _minVal, float _sliderVal, int _xPos, int _yPos, String _label) {
+  void setupSlider(int _startWidth, int _startHeight, int _fillColor, int _sliderColor, float _maxVal, float _minVal, float _clickedVal, int _xPos, int _yPos, String _label) {
     startWidth = _startWidth;
     startHeight = _startHeight;
     fillColor = _fillColor;
     sliderColor = _sliderColor;
     maxVal = _maxVal;
     minVal = _minVal;
-    sliderVal = _sliderVal;
+    clickedVal = _clickedVal;
     xPos = _xPos;
     yPos = _yPos;
     label = _label;
     font = createFont("Georgia", 14); 
     textSize(14);
     textFont(font);
+    sliderVal = map(clickedVal,0,startWidth,minVal,maxVal); //map the position of the click inside the slider to our min and max vals
   }
 }
 
