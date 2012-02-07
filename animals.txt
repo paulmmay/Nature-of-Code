@@ -1,1 +1,0 @@
-//Species	Common Name	Weight Min (Kg)	Weight Max (Kg)Loxodonta africana	African elephant	2268	6350Felis catus	Domestic cat	2	9Bubalus bubalis	Water buffalo	400	900																		
