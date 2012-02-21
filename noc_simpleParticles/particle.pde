@@ -13,8 +13,8 @@ class Particle {
   void create(PVector _location) {
     location = _location.get();
     location = new PVector(location.x, location.y);
-    velocity = new PVector(random(-1, 1), random(-2, 0));
-    acceleration = new PVector(0, 0.05);
+    velocity = new PVector(random(-2, 2), random(-3, 0));
+    acceleration = new PVector(0, 0.08);
     lifespan = 200;
   }
 
