@@ -32,18 +32,30 @@ void draw() {
   background(colours[0]);
   mySlider.update();
   mySlider.render();
-  for (System sys:allSystems) {
-    sys.render();
+
+  //iterate through the systems, remove them when they're done
+  Iterator<System> it = allSystems.iterator();
+  while (it.hasNext ()) {
+    System s = it.next();
+    s.render();
+    
+    /*just a thought - if you don't understand that Java deletes objects from 
+    memory when all references to that object have been removed - you might
+    not undertand this, or the benefit of it */
+    
+    if (s.allParticles.size()==0) {
+      it.remove();
+    }
   }
 
   fill(0);
   text(frameRate, width-60, height-20);
 }
 
-void mousePressed(){
+void mousePressed() {
   System sys = new System(); 
-  sys.create(floor(mySlider.sliderVal), new PVector(mouseX,mouseY));
+  sys.create(floor(mySlider.sliderVal), new PVector(mouseX, mouseY));
   allSystems.add(sys);
-
+  println(allSystems.size());
 }
 
