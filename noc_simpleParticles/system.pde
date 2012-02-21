@@ -10,6 +10,7 @@ class System {
     numParticles = _numParticles;
     allParticles = new ArrayList();
 
+    //i think I can clean this up
     for (int i=0;i<numParticles;i++) {
       float r = random(1);
       if (r > 0.5) {
