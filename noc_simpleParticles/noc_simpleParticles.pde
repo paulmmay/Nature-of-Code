@@ -21,7 +21,8 @@ void setup() {
   mySlider = new Slider();
   size(700, 500);
   background(colours[0]);
-  mySlider.setupSlider("Particles");
+  //mySlider.setupSlider("Particles");
+  mySlider.setupSlider(120, 10, 100, 200, 50, 0, 5, 50, 50, "Number of Particles");
   mySlider.render();
 
   smooth();
@@ -40,8 +41,8 @@ void draw() {
 }
 
 void mousePressed(){
-  System sys = new System();
-  sys.create(new PVector(mouseX,mouseY));
+  System sys = new System(); 
+  sys.create(floor(mySlider.sliderVal), new PVector(mouseX,mouseY));
   allSystems.add(sys);
 
 }

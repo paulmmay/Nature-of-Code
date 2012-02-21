@@ -33,7 +33,7 @@ class Slider {
   void update() {
     fill(0, 8, 8);
     //format our sliderValue to make it presentable for rendering
-    DecimalFormat df = new DecimalFormat("#.##");
+    DecimalFormat df = new DecimalFormat("#");
     String formattedVal = df.format(sliderVal);
     text(label+": "+formattedVal, xPos, yPos-startHeight/2);
     //if the mouse is inside

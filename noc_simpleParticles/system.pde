@@ -5,10 +5,11 @@ class System {
   System() {
   }
 
-  void create(PVector _location) {
+  void create(int _numParticles, PVector _location) {
     location = _location.get();
+    numParticles = _numParticles;
     allParticles = new ArrayList();
-    numParticles = 10;
+   
     for (int i=0;i<numParticles;i++) {
       Particle p = new Particle();
       p.create(location);
