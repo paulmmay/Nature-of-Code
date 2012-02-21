@@ -2,7 +2,7 @@
 
  Nature of Code - Experiments in Simple Motion: Particle System
  
- 14th February 2012
+ 21st February 2012
  
  Paul May
  paulmay.org
@@ -22,7 +22,7 @@ void setup() {
   size(700, 500);
   background(colours[0]);
   //mySlider.setupSlider("Particles");
-  mySlider.setupSlider(120, 10, 100, 200, 50, 0, 5, 50, 50, "Number of Particles");
+  mySlider.setupSlider(120, 10, 100, 200, 50, 0, 35, 50, 50, "Particles");
   mySlider.render();
 
   smooth();

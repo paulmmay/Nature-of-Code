@@ -9,7 +9,7 @@ class System {
     location = _location.get();
     numParticles = _numParticles;
     allParticles = new ArrayList();
-   
+
     for (int i=0;i<numParticles;i++) {
       Particle p = new Particle();
       p.create(location);
@@ -18,9 +18,17 @@ class System {
   }
 
   void render() {
-    for (Particle p:allParticles) {
+    //change this to be an iterator
+    Iterator<Particle> it = allParticles.iterator();
+    while (it.hasNext ()) {
+      Particle p = it.next();
       p.update();
       p.render();
+
+      if (p.isDead()) {
+        println(it +" is dead");
+        it.remove();
+      }
     }
   }
 }
