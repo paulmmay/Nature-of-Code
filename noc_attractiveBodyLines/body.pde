@@ -22,7 +22,7 @@ class Body {
 
   void render() {
     noStroke();
-    fill(colours[4]);
+    fill(colours[1]);
     ellipse(location.x, location.y, mass/5, mass/5);
     noFill();
     //stroke(colours[2]);

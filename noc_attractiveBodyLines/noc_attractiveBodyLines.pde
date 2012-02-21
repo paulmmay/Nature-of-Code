@@ -12,18 +12,18 @@
 ArrayList<Body> allBodies;
 ArrayList<Walker> allWalkers;
 color[] colours = {
-  #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8
+  #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8, #191919
 };
 
 void setup() {
-  size(700, 500);
+  size(1400, 1000);
   allBodies = new ArrayList();
   allWalkers = new ArrayList();
   Body b = new Body();
   b.create();
   allBodies.add(b);
   background(colours[0]);
-  for(int i=0;i<10;i++){
+  for(int i=0;i<3;i++){
   Walker w = new Walker();
   w.create(i);
   allWalkers.add(w);
@@ -32,7 +32,8 @@ void setup() {
 
 void draw() {
   smooth();
-  background(colours[0]);
+  //background(colours[0]);
+  background(colours[6]);
   //for all bodies, attraact all walkers within range
   for (Body b:allBodies) {
     b.render();

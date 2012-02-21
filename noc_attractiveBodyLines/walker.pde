@@ -13,7 +13,7 @@ class Walker {
 
   void create(int _tag) {
     tag = _tag;
-    grayCol = int(random(140, 245));
+    grayCol = int(random(60, 130));
     location = new PVector(random(width), random(height));
     velocity = new PVector(2, 2);
     acceleration = new PVector(0, 0);
