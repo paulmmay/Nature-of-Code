@@ -38,24 +38,26 @@ void draw() {
   while (it.hasNext ()) {
     System s = it.next();
     s.render();
-    
+
     /*just a thought - if you don't understand that Java deletes objects from 
-    memory when all references to that object have been removed - you might
-    not undertand this, or the benefit of it */
-    
+     memory when all references to that object have been removed - you might
+     not undertand this, or the benefit of it */
+
     if (s.allParticles.size()==0) {
+      println("system "+it +" is dead");
       it.remove();
     }
   }
 
   fill(0);
-  text(frameRate, width-60, height-20);
+  text(floor(frameRate), width-60, height-20);
 }
 
 void mousePressed() {
   System sys = new System(); 
-  sys.create(floor(mySlider.sliderVal), new PVector(mouseX, mouseY));
+  //hacky hack - the slider is a float, will figure out later
+  sys.create(ceil(mySlider.sliderVal)-1, new PVector(mouseX, mouseY));
   allSystems.add(sys);
-  println(allSystems.size());
+//  println(allSystems.size());
 }
 

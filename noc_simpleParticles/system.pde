@@ -11,9 +11,17 @@ class System {
     allParticles = new ArrayList();
 
     for (int i=0;i<numParticles;i++) {
-      Particle p = new Particle();
-      p.create(location);
-      allParticles.add(p);
+      float r = random(1);
+      if (r > 0.5) {
+        Particle p = new Particle();       
+        p.create(location);
+        allParticles.add(p);
+      }
+      else {
+        otherParticle p = new otherParticle();
+        p.create(location);
+        allParticles.add(p);
+      }
     }
   }
 
@@ -26,7 +34,7 @@ class System {
       p.render();
 
       if (p.isDead()) {
-        println(it +" is dead");
+        println("particle "+it +" is dead");
         it.remove();
       }
     }
