@@ -25,9 +25,10 @@ void setup() {
   size(700, 500);
   smooth();
   physics = new VerletPhysics2D ();
+  physics.setWorldBounds(new Rect(10,10,width-20,height-20));
   allParticles = new ArrayList();
   //load data - off in a function, returns an array of strings, for us to split. 
-  parseCSV(getCSV("remote"));
+  parseCSV(getCSV("local"));
 }
 
 void draw() {
@@ -35,6 +36,7 @@ void draw() {
   for (Particle p:allParticles) {
     p.render();
   }
+  
 }
 
 //pass each row of data into fresh new objects.
@@ -55,6 +57,6 @@ Particle createParticle(float _x, float _y) {
 }
 
 void keyPressed() {
-  save(millis+".png");
+  save(millis()+".png");
 }
 

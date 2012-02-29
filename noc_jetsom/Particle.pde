@@ -9,24 +9,16 @@ class Particle extends VerletParticle2D {
   //data from our CSV
   String date, imageName, description, location, person, category;
   Float dollarValue;
-  float x;
-  float y;
 
   Particle (Vec2D loc) {
     //don't understand this
     super(loc);
   }
-
-  void display () {
-  }
-
-
+  
   /*I like the idea that objects have internal machinery to handle with data passed to them, 
    feels more true to the idea of OOP than having an external puppetteer.*/
 
   void create() {
-    x = random(width);
-    y = random(height);
     //set up images
     try {
       processImage(loadImage("data/images/"+imageName+".jpeg"));
@@ -37,11 +29,14 @@ class Particle extends VerletParticle2D {
   }
 
   void render() {
+    //draw a rectangle to an arbitrary scale
     noStroke();
-    fill(imgColour);
+    
     textAlign(CENTER);
+    fill(0);
     text(imageName, x, y);
-    rect(x, y, imgWidth/50, imgHeight/50);
+    fill(imgColour);
+    rect(x, y, imgWidth/30, imgHeight/30);
   }
 
   void processImage(PImage _image) {
