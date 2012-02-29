@@ -19,6 +19,8 @@ VerletPhysics2D physics;
 String data[];
 
 void setup() {  
+  size(700,500);
+  smooth();
   physics = new VerletPhysics2D ();
   allParticles = new ArrayList();
   //load data - off in a function, returns an array of strings, for us to split. 
@@ -33,6 +35,7 @@ void parseCSV(String[] _data) {
   for (int i=1;i<_data.length;i++) {
     Particle p = createParticle(random(width), random(height));
     p.processCsvRow(_data[i]);
+    p.create();
     allParticles.add(p);
    // println(p.description);
   }
