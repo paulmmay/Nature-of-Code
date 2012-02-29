@@ -17,9 +17,12 @@ import toxi.physics2d.behaviors.*;
 ArrayList<Particle> allParticles;
 VerletPhysics2D physics;
 String data[];
+color[] colours = {
+  #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8, #191919
+};
 
 void setup() {  
-  size(700,500);
+  size(700, 500);
   smooth();
   physics = new VerletPhysics2D ();
   allParticles = new ArrayList();
@@ -28,6 +31,10 @@ void setup() {
 }
 
 void draw() {
+  background(colours[0]);
+  for (Particle p:allParticles) {
+    p.render();
+  }
 }
 
 //pass each row of data into fresh new objects.
@@ -37,7 +44,7 @@ void parseCSV(String[] _data) {
     p.processCsvRow(_data[i]);
     p.create();
     allParticles.add(p);
-   // println(p.description);
+    // println(p.description);
   }
 }
 
@@ -45,5 +52,9 @@ void parseCSV(String[] _data) {
 Particle createParticle(float _x, float _y) {
   Particle p = new Particle(new Vec2D(_x, _y));
   return p;
+}
+
+void keyPressed() {
+  save(millis+".png");
 }
 

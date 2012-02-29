@@ -9,7 +9,8 @@ class Particle extends VerletParticle2D {
   //data from our CSV
   String date, imageName, description, location, person, category;
   Float dollarValue;
-
+  float x;
+  float y;
 
   Particle (Vec2D loc) {
     //don't understand this
@@ -24,6 +25,8 @@ class Particle extends VerletParticle2D {
    feels more true to the idea of OOP than having an external puppetteer.*/
 
   void create() {
+    x = random(width);
+    y = random(height);
     //set up images
     try {
       processImage(loadImage("data/images/"+imageName+".jpeg"));
@@ -33,7 +36,16 @@ class Particle extends VerletParticle2D {
     }
   }
 
+  void render() {
+    noStroke();
+    fill(imgColour);
+    textAlign(CENTER);
+    text(imageName, x, y);
+    rect(x, y, imgWidth/50, imgHeight/50);
+  }
+
   void processImage(PImage _image) {
+    //find widths, colours etc. 
     imgWidth = _image.width;
     imgHeight = _image.height;
     imgArea = imgWidth * imgHeight;
@@ -54,6 +66,7 @@ class Particle extends VerletParticle2D {
   }
 
   void processCsvRow(String _row) {
+    //take a row of data from the CSV and parse it
     String[] data = split(_row, ",");
     imageName = data[1];
     description = data[2];
@@ -72,6 +85,7 @@ class Particle extends VerletParticle2D {
   }
 
   void report() {
+    //who are ya?
     println(date+", "+imageName+", "+description+", "+location+", "+person+", "+category);
   }
 }
