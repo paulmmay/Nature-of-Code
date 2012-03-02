@@ -1,42 +1,73 @@
-class Particle extends VerletParticle2D {
+class Particle {
+
+
 
   //data related to our image
-
-  //PImage imgImage;
   color imgColour;
   int imgWidth, imgHeight, imgArea;
 
   //data from our CSV
   String date, imageName, description, location, person, category;
   Float dollarValue;
+  Float x, y, r;
 
-  Particle (Vec2D loc) {
-    //don't understand this
-    super(loc);
+  //box2d gubbins
+  Body body;
+
+  Particle () {
   }
-  
+
   /*I like the idea that objects have internal machinery to handle with data passed to them, 
-   feels more true to the idea of OOP than having an external puppetteer.*/
+   feels more true to the idea of OOP than having an external puppetteer; still getting better at this.*/
 
   void create() {
     //set up images
-    try {
-      processImage(loadImage("data/images/"+imageName+".jpeg"));
-    }
-    catch(Exception e) {
-      //println(e);
-    }
+    processImage(loadImage("data/images/"+imageName+".jpeg"));
+    x = random(width);
+    y = random(height);
+    r = 5.0;
+
+    // Define a body
+    BodyDef bd = new BodyDef();
+    bd.type = BodyType.DYNAMIC;
+
+    // Put the body at XY, requiring conversion between coords systems
+    bd.position = box2d.coordPixelsToWorld(x, y);
+    body = box2d.world.createBody(bd);
+
+    //for now this is a circle, make it a rectangle later
+    CircleShape cs = new CircleShape();
+    cs.m_radius = box2d.scalarPixelsToWorld(r);
+
+    //define a fixture - bloody hell this is tedious
+    FixtureDef fd = new FixtureDef();
+    fd.shape = cs;
+    fd.density = 1;
+    fd.friction = 0.3;
+    fd.restitution = 0.5;
+    body.createFixture(fd);
+
+    //start it moving
+    body.setLinearVelocity(new Vec2(random(-5, 5), random(-5, -5)));
+    body.setAngularVelocity(random(-1, 1));
   }
 
   void render() {
     //draw a rectangle to an arbitrary scale
-    noStroke();
-    
-    textAlign(CENTER);
-    fill(0);
-    text(imageName, x, y);
+    // We look at each body and get its screen position
+    Vec2 pos = box2d.getBodyPixelCoord(body);
+    // Get its angle of rotation
+    float a = body.getAngle();
+    pushMatrix();
+    translate(pos.x, pos.y);
+    rotate(a);
     fill(imgColour);
-    rect(x, y, imgWidth/30, imgHeight/30);
+    stroke(0);
+    strokeWeight(1);
+    rect(0, 0, imgWidth/30, imgHeight/30);
+    // Let's add a line so we can see the rotation
+    line(0, 0, r, 0);
+    popMatrix();
   }
 
   void processImage(PImage _image) {
@@ -75,7 +106,6 @@ class Particle extends VerletParticle2D {
     }
     person = data[6];
     category = data[7];
-
     //should do some error checking here, but for now ignore
   }
 

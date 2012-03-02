@@ -2,41 +2,52 @@
 
  Nature of Code - Jetsom
  
- 28th February 2012
+ 1st March 2012
  
  Paul May
  paulmay.org
  
  */
 
-import toxi.geom.*;
-import toxi.physics2d.*;
-import toxi.physics2d.behaviors.*;
-
+import pbox2d.*;
+import org.jbox2d.collision.shapes.*;
+import org.jbox2d.common.*;
+import org.jbox2d.dynamics.*;
 
 ArrayList<Particle> allParticles;
-VerletPhysics2D physics;
+
+
 String data[];
 color[] colours = {
   #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8, #191919
 };
+PBox2D box2d;
 
 void setup() {  
   size(700, 500);
   smooth();
-  physics = new VerletPhysics2D ();
-  physics.setWorldBounds(new Rect(10,10,width-20,height-20));
+
+  box2d = new PBox2D(this);
+  box2d.createWorld();
+  box2d.setGravity(0, 0);
+
+
   allParticles = new ArrayList();
   //load data - off in a function, returns an array of strings, for us to split. 
   parseCSV(getCSV("local"));
 }
 
 void draw() {
+
   background(colours[0]);
+  box2d.step();
   for (Particle p:allParticles) {
     p.render();
+    
+    //attract all particles to all particles?
+    
+    
   }
-  
 }
 
 //pass each row of data into fresh new objects.
@@ -52,7 +63,7 @@ void parseCSV(String[] _data) {
 
 //a generic createParticle method
 Particle createParticle(float _x, float _y) {
-  Particle p = new Particle(new Vec2D(_x, _y));
+  Particle p = new Particle();
   return p;
 }
 
