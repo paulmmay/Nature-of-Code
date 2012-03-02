@@ -1,4 +1,4 @@
-class Particle {
+class Particle extends VerletParticle2D {
 
 
 
@@ -9,13 +9,12 @@ class Particle {
   //data from our CSV
   String date, imageName, description, location, person, category;
   Float dollarValue;
-  Float x, y, r;
+  float r;
   int renderScale = 20;
 
-  //box2d gubbins
-  Body body;
 
-  Particle () {
+  Particle(Vec2D pos) {
+    super(pos);
   }
 
   /*I like the idea that objects have internal machinery to handle with data passed to them, 
@@ -24,63 +23,18 @@ class Particle {
   void create() {
     //set up images
     processImage(loadImage("data/images/"+imageName+".jpeg"));
-    x = (width/2)+random(50);
-    y = random(height/2, height/2*1.5);
-
-    // Define a body
-    BodyDef bd = new BodyDef();
-    bd.type = BodyType.DYNAMIC;
-
-    // Put the body at XY, requiring conversion between coords systems
-    bd.position = box2d.coordPixelsToWorld(x, y);
-    body = box2d.world.createBody(bd);
-
-    //for now this is a circle, make it a rectangle later
-    PolygonShape sd = new PolygonShape();
-    float box2dW = box2d.scalarPixelsToWorld(imgWidth/(renderScale*2));
-    float box2dH = box2d.scalarPixelsToWorld(imgHeight/(renderScale*2));
-    sd.setAsBox(box2dW, box2dH);
-
-    //define a fixture - bloody hell this is tedious
-    FixtureDef fd = new FixtureDef();
-    fd.shape = sd;
-    fd.density = 0.01;
-    fd.friction = 10;
-    fd.restitution = 0;
-    body.createFixture(fd);
-
-    //give it a nudge
-    // body.setLinearVelocity(new Vec2(random(-2, 2), random(-2, 2)));
-    body.setAngularVelocity(random(-0.5, 0.5));
   }
 
-  Vec2 attract(Particle p) {
-    //We pass in another particle - everything attracts to everything
-    float g = imgArea/10000;
-    Vec2 pos = body.getWorldCenter(); //this
-    Vec2 ppos = p.body.getWorldCenter(); //that
-    Vec2 force = ppos.sub(pos);
-    float distance = force.length();
-    distance = constrain(distance, 1, 5);
-    force.normalize();
-    float strength = (g*1*p.body.m_mass) / (distance*distance);
-    force.mulLocal(strength);
-    return force;
-  }
+  
 
   void render() {
-    //draw a rectangle to an arbitrary scale
-    // We look at each body and get its screen position
-    Vec2 pos = box2d.getBodyPixelCoord(body);
-    // Get its angle of rotation
-    float a = body.getAngle();
     rectMode(CENTER);
     pushMatrix();
-    translate(pos.x, pos.y);
-    rotate(-a);
+    //translate(pos.x, pos.y);
+    //rotate(-a);
     fill(imgColour);
     noStroke();
-    rect(0, 0, imgWidth/renderScale, imgHeight/renderScale);
+    rect(x, y, imgWidth/renderScale, imgHeight/renderScale);
     popMatrix();
   }
 
@@ -123,9 +77,6 @@ class Particle {
     //should do some error checking here, but for now ignore
   }
 
-  void applyForce(Vec2 v) {
-    body.applyForce(v, body.getWorldCenter());
-  }
 
   void report() {
     //who are ya?

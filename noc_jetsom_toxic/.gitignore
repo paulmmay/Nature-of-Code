@@ -1,0 +1,5 @@
+.DS_Store
+data
+*.jpg
+*.jpeg
+GetData.pde
