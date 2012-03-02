@@ -22,6 +22,8 @@ color[] colours = {
   #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8, #191919
 };
 PBox2D box2d;
+ArrayList<Boundary> boundaries;
+
 
 void setup() {  
   size(700, 500);
@@ -29,13 +31,20 @@ void setup() {
 
   box2d = new PBox2D(this);
   box2d.createWorld();
-  box2d.setGravity(0, 0);
+  box2d.setGravity(0, -10);
 
 
   allParticles = new ArrayList();
   //load data - off in a function, returns an array of strings, for us to split. 
   parseCSV(getCSV("local"));
+  
+  //boundaries
+    boundaries = new ArrayList<Boundary>();
+
+  // Add a bunch of fixed boundaries
+  boundaries.add(new Boundary(width/2,height-5,width,10));
 }
+
 
 void draw() {
 
@@ -43,10 +52,11 @@ void draw() {
   box2d.step();
   for (Particle p:allParticles) {
     p.render();
-    
-    //attract all particles to all particles?
-    
-    
+  }
+  
+    // Display all the boundaries
+  for (Boundary wall: boundaries) {
+    wall.display();
   }
 }
 

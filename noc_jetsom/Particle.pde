@@ -23,9 +23,8 @@ class Particle {
   void create() {
     //set up images
     processImage(loadImage("data/images/"+imageName+".jpeg"));
-    x = random(width);
-    y = random(height);
-    r = 5.0;
+    x = (width/2)+random(50);
+    y = random(height/2, height/2*1.5);
 
     // Define a body
     BodyDef bd = new BodyDef();
@@ -36,20 +35,36 @@ class Particle {
     body = box2d.world.createBody(bd);
 
     //for now this is a circle, make it a rectangle later
-    CircleShape cs = new CircleShape();
-    cs.m_radius = box2d.scalarPixelsToWorld(r);
+    PolygonShape sd = new PolygonShape();
+    float box2dW = box2d.scalarPixelsToWorld(imgWidth/60);
+    float box2dH = box2d.scalarPixelsToWorld(imgHeight/60);
+    sd.setAsBox(box2dW, box2dH);
 
     //define a fixture - bloody hell this is tedious
     FixtureDef fd = new FixtureDef();
-    fd.shape = cs;
-    fd.density = 1;
-    fd.friction = 0.3;
-    fd.restitution = 0.5;
+    fd.shape = sd;
+    fd.density = 0.01;
+    fd.friction = 10;
+    fd.restitution = 0;
     body.createFixture(fd);
 
-    //start it moving
-    body.setLinearVelocity(new Vec2(random(-5, 5), random(-5, -5)));
-    body.setAngularVelocity(random(-1, 1));
+    //give it a nudge
+    // body.setLinearVelocity(new Vec2(random(-2, 2), random(-2, 2)));
+    body.setAngularVelocity(random(-0.5, 0.5));
+  }
+
+  Vec2 attract(Particle p) {
+    //We pass in another particle - everything attracts to everything
+    float g = imgArea/10000;
+    Vec2 pos = body.getWorldCenter(); //this
+    Vec2 ppos = p.body.getWorldCenter(); //that
+    Vec2 force = ppos.sub(pos);
+    float distance = force.length();
+    distance = constrain(distance, 1, 5);
+    force.normalize();
+    float strength = (g*1*p.body.m_mass) / (distance*distance);
+    force.mulLocal(strength);
+    return force;
   }
 
   void render() {
@@ -58,15 +73,14 @@ class Particle {
     Vec2 pos = box2d.getBodyPixelCoord(body);
     // Get its angle of rotation
     float a = body.getAngle();
+    rectMode(CENTER);
     pushMatrix();
     translate(pos.x, pos.y);
-    rotate(a);
+    rotate(-a);
     fill(imgColour);
     stroke(0);
     strokeWeight(1);
     rect(0, 0, imgWidth/30, imgHeight/30);
-    // Let's add a line so we can see the rotation
-    line(0, 0, r, 0);
     popMatrix();
   }
 
@@ -107,6 +121,10 @@ class Particle {
     person = data[6];
     category = data[7];
     //should do some error checking here, but for now ignore
+  }
+
+  void applyForce(Vec2 v) {
+    body.applyForce(v, body.getWorldCenter());
   }
 
   void report() {
