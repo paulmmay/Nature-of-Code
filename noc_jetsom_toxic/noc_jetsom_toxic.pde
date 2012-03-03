@@ -15,7 +15,10 @@ import toxi.physics2d.*;
 VerletPhysics2D physics;
 
 ArrayList<Particle> allParticles;
+ArrayList<Cluster> allClusters;
 
+//maybe create a hash of clusters, rather than a string, int key value pair
+Map<String, Cluster> clusterMap = new HashMap<String, Cluster>();
 
 String data[];
 color[] colours = {
@@ -32,6 +35,7 @@ void setup() {
   physics.setWorldBounds(new Rect(10, 10, width-20, height-20));
 
   allParticles = new ArrayList();
+  allClusters = new ArrayList();
   //load data - off in a function, returns an array of strings, for us to split. 
   parseCSV(getCSV("local"));
 
@@ -42,27 +46,51 @@ void setup() {
 void draw() {
   physics.update();
   background(colours[0]);
-    connect();
-  for (Particle p:allParticles) {
-    p.render();
+  //connectAll();
+  for(Cluster c:allClusters){
+  
+    
+    c.connectParticles();
+    c.render();
   }
-
 }
 
 
 void parseCSV(String[] _data) {
+  float middle = width/2;
   //pass each row of data into fresh new Particle objects.
-  Vec2D c = new Vec2D(width/2, height/2);
+  Vec2D c = new Vec2D(middle, height/2);
   for (int i=1;i<_data.length;i++) {
     Particle p = new Particle(c.add(Vec2D.randomVector()));
     p.processCsvRow(_data[i]);
     p.create();
+    findCluster(p);
     allParticles.add(p);
+    middle = random(width);
   }
 }
 
+void findCluster(Particle p) {
+  //check for the feeling in the hash, increment if you find it, add if you don't 
+  if (clusterMap.containsKey(p.category)) {  
+    //http://stackoverflow.com/questions/4157972/how-to-update-a-value-given-a-key-in-a-java-hashmap
+    //http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
+    Cluster c = clusterMap.get(p.category);
+    println("I've seen "+ p.category +" "+c.allParticles.size()+" times");
+    c.allParticles.add(p);
+  }
+  else {
+    println("creating hash for "+p.category);  
+    Cluster c = new Cluster();
+    allClusters.add(c);
+    clusterMap.put(p.category, c);
+    c.create();
+    c.allParticles.add(p);
+    //this is where we create a new cluster
+  }
+}
 
-void connect() {
+void connectAll() {
   // Connect all the nodes with a Spring
   for (int i = 0; i < allParticles.size()-1; i++) {
     VerletParticle2D ni = allParticles.get(i);
