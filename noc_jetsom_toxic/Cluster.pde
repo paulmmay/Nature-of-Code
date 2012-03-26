@@ -29,7 +29,7 @@ class Cluster {
       for (int j = i+1; j < allParticles.size(); j++) {
         VerletParticle2D nj = allParticles.get(j);
         // A Spring needs two particles, a resting length, and a strength
-        physics.addSpring(new VerletSpring2D(ni, nj, random(100,width/2), 0.01));
+        physics.addSpring(new VerletSpring2D(ni, nj, random(100,height-height/5), 0.01));
         stroke(0, 30);
         line(ni.x, ni.y, nj.x, nj.y);
       }

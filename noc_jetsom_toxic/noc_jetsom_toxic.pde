@@ -8,6 +8,9 @@
  paulmay.org
  
  */
+ 
+ //My Pocket - Burak Arikan
+//split into day, time - different forces attracting different types  
 
 import toxi.geom.*;
 import toxi.physics2d.*;
@@ -27,7 +30,7 @@ color[] colours = {
 
 
 void setup() {  
-  size(700, 500);
+  size(1200, 700);
   smooth();
 
   // Initialize the physics
@@ -97,7 +100,7 @@ void connectAll() {
     for (int j = i+1; j < allParticles.size(); j++) {
       VerletParticle2D nj = allParticles.get(j);
       // A Spring needs two particles, a resting length, and a strength
-      physics.addSpring(new VerletSpring2D(ni, nj, 300, 0.01));
+      physics.addSpring(new VerletSpring2D(ni, nj, 100, 0.01));
       stroke(0, 30);
       line(ni.x, ni.y, nj.x, nj.y);
     }

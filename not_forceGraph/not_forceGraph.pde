@@ -42,7 +42,7 @@ boolean showParticles = true;
 PFont f;
 
 void setup() {
-  size(300,300);
+  size(600,600);
   smooth();
   frameRate(30);
   f = createFont("Georgia",12,true);
@@ -52,7 +52,7 @@ void setup() {
   physics.setWorldBounds(new Rect(10,10,width-20,height-20));
 
   // Spawn a new random graph
-  cluster = new Cluster(8,100,new Vec2D(width/2,height/2));
+  cluster = new Cluster(40,300,new Vec2D(width/2,height/2));
 
 }
 
@@ -91,7 +91,7 @@ void keyPressed() {
   } 
   else if (key == 'n') {
       physics.clear();
-      cluster = new Cluster(int(random(2,20)),random(10,width/2),new Vec2D(width/2,height/2));
+      cluster = new Cluster(int(random(10,16)),random(width/3,width/2),new Vec2D(width/2,height/2));
 
   }
 }
