@@ -110,7 +110,10 @@ class Vehicle {
     }
     else{
       //moodColour = colours[6];
-      flag = "r";
+      flag = _s.type;
+      //if it's a threat, run away
+      
+      //if it's food, arrive and feed
     }
   }
 
