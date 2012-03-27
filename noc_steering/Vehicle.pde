@@ -91,7 +91,7 @@ class Vehicle {
   void decide(Something _s) {
     //how far am I from the Something
     float targetDistance = dist(location.x, location.y, _s.location.x, _s.location.y);
-    println(targetDistance);
+   // println(targetDistance);
     //if I'm out of range just wander
     if (targetDistance>conf.scent_r) {
       //indicate our state
@@ -99,10 +99,18 @@ class Vehicle {
       flag = "w";
       wander();
     }
-    else {
-      moodColour = colours[3];
+    else if (targetDistance>conf.sight_r && targetDistance < conf.scent_r) {
+      //change the speed of approach if we're within visual range
+      //this needs scale depending on target distance
+      maxspeed = 1.5;
+      maxforce = 0.03;
+      moodColour = colours[6];
       flag = "s";
       seek(_s.location);
+    }
+    else{
+      //moodColour = colours[6];
+      flag = "r";
     }
   }
 
