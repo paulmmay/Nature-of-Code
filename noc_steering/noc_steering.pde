@@ -2,20 +2,22 @@
 
 Vehicle v;
 Threat t;
-Food f;
+//Food f;
+Config conf;
 ArrayList<Something> allThings = new ArrayList();
 color[] colours = {
   #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8, #B0D748, #DB4050
 };
 
 void setup() {
-  size(700, 450);
-  v = new Vehicle(width/2, height/2);
+  conf = new Config();
+  size(1000, 600);
+  v = new Vehicle(random(width), random(height));
   smooth();
   t = new Threat();
-  f = new Food();
+ // f = new Food();
   allThings.add(t);
-  allThings.add(f);
+ // allThings.add(f);
 }
 
 void draw() {
@@ -28,7 +30,8 @@ void draw() {
   //render everything
   for (Something s:allThings) {
     s.render();
-    v.decide(s.location);
+    v.decide(s);
+    v.boundaries();
   }
   v.update();
   v.display();
