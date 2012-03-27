@@ -5,7 +5,7 @@ class Something {
 
   Something() {
     //location = new PVector(random(width), random(height));
-    location = new PVector(width/2, height/2);
+    location = new PVector(random(conf.bound,width-conf.bound), random(conf.bound,height-conf.bound));
     println(location);
   }
 

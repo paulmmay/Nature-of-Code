@@ -13,10 +13,11 @@ void setup() {
   conf = new Config();
   size(1000, 600);
   //make 5
-  for (int i=0;i<1;i++) {
+  for (int i=0;i<2;i++) {
     Vehicle v = new Vehicle(random(width), random(height));
     allVehicles.add(v);
   }
+
   smooth();
   t = new Threat();
   // f = new Food();

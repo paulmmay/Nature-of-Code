@@ -91,7 +91,7 @@ class Vehicle {
   void decide(Something _s) {
     //how far am I from the Something
     float targetDistance = dist(location.x, location.y, _s.location.x, _s.location.y);
-   // println(targetDistance);
+    // println(targetDistance);
     //if I'm out of range just wander
     if (targetDistance>conf.scent_r) {
       //indicate our state
@@ -108,11 +108,15 @@ class Vehicle {
       flag = "s";
       seek(_s.location);
     }
-    else{
+    else {
       //moodColour = colours[6];
       flag = _s.type;
-      //if it's a threat, run away
-      
+      if(_s.type.equals("threat")) {
+        println("run away");
+      }
+      else {
+        println("food");
+      }
       //if it's food, arrive and feed
     }
   }
