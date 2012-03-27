@@ -13,7 +13,7 @@ void setup() {
   conf = new Config();
   size(1000, 600);
   //make 5
-  for (int i=0;i<2;i++) {
+  for (int i=0;i<9;i++) {
     Vehicle v = new Vehicle(random(width), random(height));
     allVehicles.add(v);
   }

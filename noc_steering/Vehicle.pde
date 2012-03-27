@@ -6,7 +6,7 @@
 //decision making - Paul May
 
 class Vehicle {
-
+  ArrayList<Something> knownThreats = new ArrayList();
   PVector location;
   PVector velocity;
   PVector acceleration;
@@ -20,14 +20,20 @@ class Vehicle {
   color edgeColour;
   boolean fleeing;
 
+  //forces
+  float flee_maxspeed = 10;
+  float flee_maxforce = 1;
+  float seek_maxspeed = 4;
+  float seek_maxforce = 0.1;
+
 
   Vehicle(float x, float y) {
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
     location = new PVector(x, y);
     r = 5.0;
-    maxspeed = 3;
-    maxforce = 0.1;
+    maxspeed = seek_maxspeed;
+    maxforce = seek_maxforce;
     flag = "?";
   }
 
@@ -67,10 +73,19 @@ class Vehicle {
   }
 
 
+  void flee(PVector _target) {
+    PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
+    // Normalize desired and scale to maximum speed
+    desired.normalize();
+    desired.mult(-1*maxspeed);
+    // Steering = Desired minus velocity
+    PVector steer = PVector.sub(desired, velocity);
+    steer.limit(maxforce);  // Limit to maximum steering force
+    applyForce(steer);
+  }
+
   //wander around the place
   void wander() {
-
-
     float wanderR = 25;         // Radius for our "wander circle"
     float wanderD = 40;         // Distance for our "wander circle"
     float change = 0.3;
@@ -94,25 +109,47 @@ class Vehicle {
     // println(targetDistance);
     //if I'm out of range just wander
     if (targetDistance>conf.scent_r) {
+      fleeing = false;
+      maxspeed = seek_maxspeed; 
+      maxforce = seek_maxforce;
       //indicate our state
       moodColour = colours[1];
       flag = "w";
       wander();
     }
-    else if (targetDistance>conf.sight_r && targetDistance < conf.scent_r) {
+    else if (targetDistance>conf.sight_r && targetDistance < conf.scent_r && fleeing == false) {
       //change the speed of approach if we're within visual range
-      //this needs scale depending on target distance
-      maxspeed = 1.5;
-      maxforce = 0.03;
-      moodColour = colours[6];
-      flag = "s";
-      seek(_s.location);
+      //do we already recognise this as a threat?
+      if (knownThreats.indexOf(_s) < 0) {
+        //no we haven't seen this as a threat before
+        //this needs scale depending on target distance
+        maxspeed = seek_maxspeed; 
+        maxforce = seek_maxforce;
+        moodColour = colours[6];
+        flag = "s";
+        seek(_s.location);
+      }
+      else {
+        println("run away");
+        fleeing = true;
+        maxspeed = flee_maxspeed;
+        maxforce = flee_maxforce;
+        flee(_s.location);
+      }
     }
     else {
-      //moodColour = colours[6];
-      flag = _s.type;
-      if(_s.type.equals("threat")) {
+
+      if (_s.type.equals("threat")) {
+        flag = "t";
+        moodColour = colours[7];
+        if (knownThreats.indexOf(_s) < 0) {
+          knownThreats.add(_s);
+        };
         println("run away");
+        fleeing = true;
+        maxspeed = flee_maxspeed;
+        maxforce = flee_maxforce;
+        flee(_s.location);
       }
       else {
         println("food");
@@ -162,6 +199,15 @@ class Vehicle {
     fill(0);
     textSize(14);
     text(flag, location.x+20, location.y-20);
+
+    //how many threats do I know about
+    String threatChit = "";
+    for (int i=0;i<knownThreats.size();i++) {
+      threatChit+="•";
+    }
+    fill(colours[7]); //red
+    text(threatChit, location.x+35, location.y-20);
+
     beginShape();
     stroke(0);
     endShape();
