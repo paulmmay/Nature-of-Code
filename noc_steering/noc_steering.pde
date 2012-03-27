@@ -26,8 +26,7 @@ void setup() {
 }
 
 void draw() {
-
-
+//saveFrame("food-####.png"); 
   background(colours[0]);
 
   //update everything
