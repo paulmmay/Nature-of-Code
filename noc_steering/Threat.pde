@@ -2,8 +2,9 @@ class Threat extends Something {
 
   Threat() {
     myColour = colours[7];
-    type = "threat";
+    threat = true;
     println("Hi, I'm a threatening object - you'd better stay away");
   }
+  void deplete(){}
 }
 

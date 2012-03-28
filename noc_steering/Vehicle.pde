@@ -15,16 +15,19 @@ class Vehicle {
   float wandertheta;
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
-  color moodColour;
-  String flag;
+  color moodColour; //an indicator of my mood
+  String flag; //the little text indicator beside me
   color edgeColour;
-  boolean fleeing;
+  boolean fleeing; //am I running away
+  boolean arriving; //am I currently dealing with an object
 
   //forces
   float flee_maxspeed = 10;
   float flee_maxforce = 1;
   float seek_maxspeed = 4;
   float seek_maxforce = 0.1;
+  float arrive_maxspeed = 2;
+  float arrive_maxforce = 0.05;
 
 
   Vehicle(float x, float y) {
@@ -101,63 +104,84 @@ class Vehicle {
     seek(target);
   }  
 
-
-  //what behaviour should I carry out based on the location and type of object?
-  void decide(Something _s) {
-    //how far am I from the Something
-    float targetDistance = dist(location.x, location.y, _s.location.x, _s.location.y);
-    // println(targetDistance);
-    //if I'm out of range just wander
-    if (targetDistance>conf.scent_r) {
-      fleeing = false;
-      maxspeed = seek_maxspeed; 
-      maxforce = seek_maxforce;
-      //indicate our state
-      moodColour = colours[1];
-      flag = "w";
-      wander();
-    }
-    else if (targetDistance>conf.sight_r && targetDistance < conf.scent_r && fleeing == false) {
-      //change the speed of approach if we're within visual range
-      //do we already recognise this as a threat?
-      if (knownThreats.indexOf(_s) < 0) {
-        //no we haven't seen this as a threat before
-        //this needs scale depending on target distance
-        maxspeed = seek_maxspeed; 
-        maxforce = seek_maxforce;
-        moodColour = colours[6];
-        flag = "s";
-        seek(_s.location);
-      }
-      else {
-        println("run away");
-        fleeing = true;
-        maxspeed = flee_maxspeed;
-        maxforce = flee_maxforce;
-        flee(_s.location);
-      }
-    }
-    else {
-
-      if (_s.type.equals("threat")) {
-        flag = "t";
-        moodColour = colours[7];
-        if (knownThreats.indexOf(_s) < 0) {
-          knownThreats.add(_s);
-        };
-        println("run away");
-        fleeing = true;
-        maxspeed = flee_maxspeed;
-        maxforce = flee_maxforce;
-        flee(_s.location);
-      }
-      else {
-        println("food");
-      }
-      //if it's food, arrive and feed
-    }
+  void arrive(PVector _target) {
+    PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
+    float d = desired.mag();
+    // Normalize desired and scale with arbitrary damping within 100 pixels
+    desired.normalize();
+    float m = map(d, 0, 100, 0, maxspeed);
+    desired.mult(m);
+    // Steering = Desired minus Velocity
+    PVector steer = PVector.sub(desired, velocity);
+    steer.limit(maxforce);  // Limit to maximum steering force
+    applyForce(steer);
   }
 
+
+  //what behaviour should I carry out based on the location and type of object?
+
+  void decide() {
+    //need to add a way to only be under the influence of one object
+    for (Something _s:allThings) {
+      //how far am I from the Something
+      float targetDistance = dist(location.x, location.y, _s.location.x, _s.location.y);
+      // println(targetDistance);
+      //if I'm out of range just wander
+      if (targetDistance>conf.scent_r || _s.alive == false) {
+        fleeing = false;
+        maxspeed = seek_maxspeed; 
+        maxforce = seek_maxforce;
+        //indicate our state
+        moodColour = colours[1];
+        flag = "w";
+        wander();
+      }
+      else if (targetDistance>conf.sight_r && targetDistance < conf.scent_r && fleeing == false) {
+        //change the speed of approach if we're within visual range
+        if (knownThreats.indexOf(_s) < 0) {
+          //this isn't on our list of threats
+          maxspeed = seek_maxspeed; 
+          maxforce = seek_maxforce;
+          moodColour = colours[6];
+          flag = "s";
+          seek(_s.location);
+        }
+        else {
+
+          //we already know this is a threat
+          fleeing = true;
+          maxspeed = flee_maxspeed;
+          maxforce = flee_maxforce;
+          flee(_s.location);
+        }
+      }
+      else {
+        if (_s.alive == true) {
+          if (_s.threat == true) {
+            flag = "t";
+            moodColour = colours[7];
+            if (knownThreats.indexOf(_s) < 0) {
+              knownThreats.add(_s);
+            };
+            //println("run away");
+            fleeing = true;
+            maxspeed = flee_maxspeed;
+            maxforce = flee_maxforce;
+            flee(_s.location);
+          }
+          else {
+            //it's food - yay!
+            maxspeed =  arrive_maxspeed;
+            maxforce =  arrive_maxforce = 0.05;
+            println("food");
+            arrive(_s.location);
+            _s.deplete(); //eat some food
+          }
+          //if it's food, arrive and feed
+        }
+      }
+    }
+  }
 
 
   void boundaries() {

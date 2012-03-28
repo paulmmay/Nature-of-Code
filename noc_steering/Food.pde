@@ -1,9 +1,9 @@
 class Food extends Something {
 
-  String type = "food";
   Food() {
+    threat = false;
+    foodSupply = 100;
     myColour = colours[6];
-     println("Hi, I'm some food - you should come and taste me");
+    println("Hi, I'm some food - you should come and taste me");
   }
 }
-
