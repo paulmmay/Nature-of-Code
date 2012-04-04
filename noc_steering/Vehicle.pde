@@ -7,6 +7,8 @@
 
 class Vehicle {
   ArrayList<Something> knownThreats = new ArrayList();
+  ArrayList<Something> knownFood = new ArrayList();
+
   PVector location;
   PVector velocity;
   PVector acceleration;
@@ -19,14 +21,14 @@ class Vehicle {
   String flag; //the little text indicator beside me
   color edgeColour;
   boolean fleeing; //am I running away
-  boolean arriving; //am I currently dealing with an object
+  boolean seeking; //am I currently dealing with an object
 
   //forces
   float flee_maxspeed = 10;
   float flee_maxforce = 1;
-  float seek_maxspeed = 4;
-  float seek_maxforce = 0.1;
-  float arrive_maxspeed = 2;
+  float seek_maxspeed = 4; //can we change this based on how much feeding the creature has done?
+  float seek_maxforce = 0.1; //
+  float arrive_maxspeed = 1;
   float arrive_maxforce = 0.05;
 
 
@@ -34,7 +36,7 @@ class Vehicle {
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
     location = new PVector(x, y);
-    r = 5.0;
+    r = 2.0;
     maxspeed = seek_maxspeed;
     maxforce = seek_maxforce;
     flag = "?";
@@ -65,6 +67,7 @@ class Vehicle {
   // A method that calculates a steering force towards a target
   // STEER = DESIRED MINUS VELOCITY
   void seek(PVector _target) {
+    //line(location.x,location.y,_target.x,_target.y);
     PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
     // Normalize desired and scale to maximum speed
     desired.normalize();
@@ -143,11 +146,10 @@ class Vehicle {
           maxspeed = seek_maxspeed; 
           maxforce = seek_maxforce;
           moodColour = colours[6];
-          flag = "s";
+          flag = "?";
           seek(_s.location);
         }
         else {
-
           //we already know this is a threat
           fleeing = true;
           maxspeed = flee_maxspeed;
@@ -171,6 +173,10 @@ class Vehicle {
           }
           else {
             //it's food - yay!
+            flag = "f";
+            if (knownFood.indexOf(_s) < 0) {
+              knownFood.add(_s);
+            };
             maxspeed =  arrive_maxspeed;
             maxforce =  arrive_maxforce = 0.05;
             println("food");
@@ -221,16 +227,24 @@ class Vehicle {
     //a little visual indicator to show what the vehicle is doing, nicer than println
 
     fill(0);
-    textSize(14);
-    text(flag, location.x+20, location.y-20);
-
+    textFont(helv, 12);
+    text(flag, location.x+15, location.y-10);
+    textFont(helv, 14);
     //how many threats do I know about
     String threatChit = "";
+    String foodChit="";
     for (int i=0;i<knownThreats.size();i++) {
       threatChit+="•";
     }
+    for (int i=0;i<knownFood.size();i++) {
+      foodChit+="•";
+    }
+
+
     fill(colours[7]); //red
-    text(threatChit, location.x+35, location.y-20);
+    text(threatChit, location.x+25, location.y-10);
+    fill(colours[6]); //green
+    text(foodChit, location.x+30, location.y-10);
 
     beginShape();
     stroke(0);

@@ -6,14 +6,18 @@ Config conf;
 ArrayList<Something> allThings = new ArrayList();
 ArrayList<Vehicle> allVehicles = new ArrayList();
 color[] colours = {
-  #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8, #B0D748, #DB4050,#222222
+  #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8, #B0D748, #DB4050, #222222
 };
-
+//Slider mySlider;
+PFont helv;
 void setup() {
+  helv = loadFont("verdana.vlw");
+ // mySlider = new Slider();
+  //mySlider.setupSlider("Radius");
   conf = new Config();
-  size(854, 480);
+  size(1366, 768);
   //make 5
-  for (int i=0;i<9;i++) {
+  for (int i=0;i<30;i++) {
     Vehicle v = new Vehicle(random(width), random(height));
     allVehicles.add(v);
   }
@@ -21,14 +25,15 @@ void setup() {
   smooth();
   t = new Threat();
   f = new Food();
-  //allThings.add(t);
-  allThings.add(f);
+  allThings.add(t);
+  //allThings.add(f);
 }
 
 void draw() {
-//saveFrame("threat####.png");
+  //saveFrame("hires_flee####.png");
   background(colours[0]);
-
+  //mySlider.update();
+  //mySlider.render();
   //update everything
 
   //render everything
