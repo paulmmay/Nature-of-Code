@@ -1,9 +1,31 @@
 class Food extends Something {
 
-  Food() {
-    threat = false;
+  /* ---------------- CONSTRUCTOR---------------------- */
+  Food(Float _x, Float _y) {
+    location = new PVector(_x, _y);
     foodSupply = 200;
     myColour = colours[6];
-    println("Hi, I'm some food - you should come and taste me");
+    mySize = 10;  
+    println(this+ " Hi, I'm some food - you should come and taste me");
   }
+
+  /* ---------------- ATRIBUTES---------------------- */
+
+
+
+
+  /* ---------------- BEHAVIOUR FUNCTIONS ---------------------- */
+  void deplete() {
+    foodSupply=foodSupply-0.1;
+    println(foodSupply);
+    if (foodSupply < 0) {
+      this.alive = false;
+    }
+  }
+
+
+
+
+  /* ---------------- ADMIN FUNCTIONS ---------------------- */
 }
+

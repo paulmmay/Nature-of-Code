@@ -1,10 +1,23 @@
 class Threat extends Something {
 
-  Threat() {
+  /* ---------------- CONSTRUCTOR---------------------- */
+  Threat(Float _x, Float _y) {
+    location = new PVector(_x, _y);
     myColour = colours[7];
-    threat = true;
-    println("Hi, I'm a threatening object - you'd better stay away");
+    mySize = 10; 
+    println(this+ " Hi, I'm a threatening object - you'd better stay away");
   }
-  void deplete(){}
+
+  /* ---------------- ATRIBUTES---------------------- */
+
+  //see parent class
+
+  /* ---------------- BEHAVIOUR FUNCTIONS ---------------------- */
+
+  //see parent class
+
+  /* ---------------- ADMIN FUNCTIONS ---------------------- */
+
+  //see parent class
 }
 
