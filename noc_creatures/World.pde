@@ -28,13 +28,11 @@ class World {
         //pick a point and pick points within an offset
         Food f = new Food(random(width), random(height));
         allThings.add(f);
-        f.number = i;
       }
       else
       {
         Threat t = new Threat(random(width), random(height));
         allThings.add(t);
-        t.number = i;
       }
     }
   }
@@ -60,8 +58,10 @@ class World {
     for (Species h:allHerds) {
       for (Creature c:h.allCreatures) { //for each herd, each creature in the herd
         c.update();
+        c.age();
         c.render();
         c.wander();
+        c.boundaries();
         c.decide(allThings);
       }
     }

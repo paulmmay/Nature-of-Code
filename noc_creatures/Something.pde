@@ -20,23 +20,25 @@ class Something {
       ellipse(location.x, location.y, mySize, mySize);
       fill(colours[8]);
       fill(colours[8]); 
-      text(number, location.x+5, location.y-5, 10);
+      text(Float.toString(foodSupply), location.x+5, location.y-5, 10);
       stroke(colours[3]);
       noFill();
       ellipse(location.x, location.y, 100, 100); //twice the smell distance of the creature - hacky for now
     }
   }
 
-  void deplete() {
-    foodSupply=foodSupply-0.1;
+  float deplete() {
+    float chunk = 0.1;
+    foodSupply=foodSupply-chunk;
     println(foodSupply);
     if (foodSupply < 0) {
       this.active = false;
     }
+    return(chunk);
   }
 
   float injur(float _energy) {
-    return _energy-1;
+    return _energy-0.1;
   }
 }
 

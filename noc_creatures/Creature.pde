@@ -24,6 +24,7 @@ class Creature {
   ArrayList<Something> knownFood = new ArrayList();
   //health
   float energy, water, mass; //how much energy do i have
+  int h = 9;
   //birthday and age and lifespan
   Date birthday;
   //attributes - these should be from species?
@@ -97,6 +98,8 @@ class Creature {
     textFont(font);
     fill(colours[8]); 
     text(mode, location.x+20, location.y-10, 15, 20);
+    fill(colours[8], 120);
+    text(Float.toString(energy), location.x+30, location.y-10, 40, 20);
   }
 
 
@@ -174,6 +177,10 @@ class Creature {
     applyForce(steer);
   }
 
+  void age() {
+    //my energy depletes over time
+    energy-=0.001;
+  }
 
   void wander() {
     if (wander == true) {
@@ -181,7 +188,7 @@ class Creature {
       maxspeed = wander_maxspeed;
       maxforce = wander_maxforce;
 
-      mode = "w";
+      mode = "W";
       float wanderR = 10;         // Radius for our "wander circle"
       float wanderD = 50;         // Distance for our "wander circle"
       float change = 0.01; //very interesting - tie this to a gene?
@@ -196,6 +203,37 @@ class Creature {
       PVector target = PVector.add(circleloc, circleOffSet);
       //println("wander");
       seek(target);
+    }
+  }
+
+  void boundaries() {
+    //there must less verbose way of doing this - like distance from the center or something?
+    PVector desired = null;
+
+    if (location.x < 20) {
+      mode = "!";
+      desired = new PVector(maxspeed, velocity.y);
+    } 
+    else if (location.x > width - 20) {
+      mode = "!";
+      desired = new PVector(-maxspeed, velocity.y);
+    } 
+
+    if (location.y < 20) {
+      mode = "!";
+      desired = new PVector(velocity.x, maxspeed);
+    } 
+    else if (location.y > height- 20) {
+      mode = "!";
+      desired = new PVector(velocity.x, -maxspeed);
+    } 
+
+    if (desired != null) {
+      desired.normalize();
+      desired.mult(maxspeed);
+      PVector steer = PVector.sub(desired, velocity);
+      steer.limit(maxforce);
+      applyForce(steer);
     }
   }
 
@@ -228,9 +266,11 @@ class Creature {
         }
         //it's food
         if (targetDistance <= 20 && whichThing.threat ==false) {
-          mode = "f";
+          mode = "F";
           arrive(whichThing.location);
-          whichThing.deplete();
+          while (energy <=100) {
+            energy+=whichThing.deplete();
+          } //feed so long as I'm not full
         }
         //it's a threat
         if (targetDistance <= 20 && whichThing.threat ==true) {

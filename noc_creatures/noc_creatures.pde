@@ -25,16 +25,16 @@ void setup() {
   size(1166, 700);
   smooth();
   w = new World(); //create the world and set basic parameters
-  w.makeThings(10, false); //make food
-  w.makeThings(10, true); //make threats
-  w.makeHerds(2, 5);
+  w.makeThings(8, false); //make food
+  w.makeThings(2, true); //make threats
+  w.makeHerds(2, 3);
   debug = true;
 }
 
 void draw() {
   background(colours[0]);
   w.render(); //render the world
-  //saveFrame("movie/test2_creatures####.png");
+  //saveFrame("movie/feeding2_creatures####.png");
 }
 
 
