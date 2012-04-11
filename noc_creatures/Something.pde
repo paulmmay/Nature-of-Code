@@ -2,20 +2,41 @@ class Something {
   PVector location;
   color myColour;
   Boolean threat;
-  Boolean alive;
+  Boolean active;
   float foodSupply;
   float mySize;
+  int number = 0;
 
   Something() {
     //location = new PVector(random(width), random(height));
     //location = new PVector(random(conf.bound, width-conf.bound), random(conf.bound, height-conf.bound));
-    alive = true;
+    active = true;
   }
 
 
   void render() {
-    fill(myColour);
-    ellipse(location.x, location.y, mySize, mySize);
+    if (active) { //don't draw me if I've been depleted
+      fill(myColour);
+      ellipse(location.x, location.y, mySize, mySize);
+      fill(colours[8]);
+      fill(colours[8]); 
+      text(number, location.x+5, location.y-5, 10);
+      stroke(colours[3]);
+      noFill();
+      ellipse(location.x, location.y, 100, 100); //twice the smell distance of the creature - hacky for now
+    }
+  }
+
+  void deplete() {
+    foodSupply=foodSupply-0.1;
+    println(foodSupply);
+    if (foodSupply < 0) {
+      this.active = false;
+    }
+  }
+
+  float injur(float _energy) {
+    return _energy-1;
   }
 }
 

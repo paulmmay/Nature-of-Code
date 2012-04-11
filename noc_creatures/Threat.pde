@@ -5,6 +5,7 @@ class Threat extends Something {
     location = new PVector(_x, _y);
     myColour = colours[7];
     mySize = 10; 
+    threat = true;
     println(this+ " Hi, I'm a threatening object - you'd better stay away");
   }
 

@@ -5,6 +5,44 @@
  */
 
 class Creature {
+  /* ---------------- TRAITS ---------------------- */
+
+  //my memory
+  //how do we make this fallible - have locations drift over time, have things pop out of memory randomly?
+  //places where there is food
+  //ArrayList<Something> knownFood = new ArrayList();
+  //places i am scared of
+  //ArrayList<Something> knownThreats = new ArrayList();
+  //creatures i know and trust - from my herd
+
+  //direct relatives - maybe a little useless?
+  //ArrayList<Creature> family = new ArrayList();
+
+  //where am i
+  PVector location, velocity, acceleration;
+  ArrayList<Something> knownThreats = new ArrayList();
+  ArrayList<Something> knownFood = new ArrayList();
+  //health
+  float energy, water, mass; //how much energy do i have
+  //birthday and age and lifespan
+  Date birthday;
+  //attributes - these should be from species?
+  float maxspeed = 0; //can we change this based on how much feeding the creature has done?
+  float maxforce = 0; //
+  //speeds and forces based on current state
+  float wander_maxspeed = 2;
+  float wander_maxforce = 0.1;
+  float flee_maxspeed = 10;
+  float flee_maxforce = 1;
+
+  float wandertheta;
+  String mode;
+  int colourIndex;
+
+  //states
+  Boolean wander = true;
+  Boolean seek = false;
+  Boolean fleeing = false;
 
   /* ---------------- CONSTRUCTOR---------------------- */
 
@@ -21,34 +59,6 @@ class Creature {
     report();
     mode = "w";
   }
-
-
-  /* ---------------- ATRIBUTES---------------------- */
-
-  //my memory
-  //how do we make this fallible - have locations drift over time, have things pop out of memory randomly?
-  //places where there is food
-  //ArrayList<Something> knownFood = new ArrayList();
-  //places i am scared of
-  //ArrayList<Something> knownThreats = new ArrayList();
-  //creatures i know and trust - from my herd
-
-  //direct relatives - maybe a little useless?
-  //ArrayList<Creature> family = new ArrayList();
-
-  //where am i
-  PVector location, velocity, acceleration;
-  //health
-  int energy, water, mass; //how much energy do i have
-  //birthday and age and lifespan
-  Date birthday;
-  //attributes - these should be from species?
-  float maxspeed = 2; //can we change this based on how much feeding the creature has done?
-  float maxforce = 0.2; //
-  float wandertheta;
-  String mode;
-
-
 
   /* ---------------- ADMIN FUNCTIONS ---------------------- */
   int getAge() {
@@ -69,6 +79,9 @@ class Creature {
   }
 
   void update() {
+
+    //default is to wander
+    // wander = true;
     // add acceleration to velocity and 
     velocity.add(acceleration);
     // Limit speed
@@ -77,56 +90,6 @@ class Creature {
     // Reset accelerationelertion to 0 each cycle
     acceleration.mult(0);
   }
-
-  /* ---------------- BEHAVIOUR FUNCTIONS ---------------------- */
-
-
-  void applyForce(PVector force) {
-    // We could add mass here if we want A = F / M
-    acceleration.add(force);
-  }
-
-  void seek(PVector _target) {
-    //line(location.x,location.y,_target.x,_target.y);
-    PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
-    // Normalize desired and scale to maximum speed
-    desired.normalize();
-    desired.mult(maxspeed);
-    // Steering = Desired minus velocity
-    PVector steer = PVector.sub(desired, velocity);
-    steer.limit(maxforce);  // Limit to maximum steering force
-    applyForce(steer);
-  }
-
-
-  void wander() {
-    //wander
-    mode = "w";
-    float wanderR = 25;         // Radius for our "wander circle"
-    float wanderD = 40;         // Distance for our "wander circle"
-    float change = 0.1; //very interesting - tie this to a gene?
-    wandertheta += random(-change, change);     // Randomly change wander theta
-    // Now we have to calculate the new location to steer towards on the wander circle
-    PVector circleloc = velocity.get();    // Start with velocity
-    circleloc.normalize();            // Normalize to get heading
-    circleloc.mult(wanderD);          // Multiply by distance
-    circleloc.add(location);               // Make it relative to boid's location
-    float h = velocity.heading2D();        // We need to know the heading to offset wandertheta
-    PVector circleOffSet = new PVector(wanderR*cos(wandertheta+h), wanderR*sin(wandertheta+h));
-    PVector target = PVector.add(circleloc, circleOffSet);
-    seek(target);
-  }
-
-  //what should I do in reference to all the things in the world - epic cheating, prefect knowledge
-  void decide(ArrayList<Something> _allThings) {
-    //distance from things
-    for (Something s:_allThings) { //check dist to each thing - awareness
-      println(PVector.sub(location,s.location));
-      println(this);
-    }
-  }
-
-
 
   void flag() {
     //display useful information about the creature
@@ -166,5 +129,133 @@ class Creature {
       //draw something fancier
     }
   }
-}
 
+  /* ---------------- BEHAVIOURS ---------------------- */
+
+
+  void applyForce(PVector force) {
+    // We could add mass here if we want A = F / M
+    acceleration.add(force);
+  }
+
+  void seek(PVector _target) {
+    //line(location.x,location.y,_target.x,_target.y);
+    PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
+    // Normalize desired and scale to maximum speed
+    desired.normalize();
+    desired.mult(maxspeed);
+    // Steering = Desired minus velocity
+    PVector steer = PVector.sub(desired, velocity);
+    steer.limit(maxforce);  // Limit to maximum steering force
+    applyForce(steer);
+  }
+
+  void arrive(PVector _target) {
+    PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
+    float d = desired.mag();
+    // Normalize desired and scale with arbitrary damping within 100 pixels
+    desired.normalize();
+    float m = map(d, 0, 100, 0, maxspeed);
+    desired.mult(m);
+    // Steering = Desired minus Velocity
+    PVector steer = PVector.sub(desired, velocity);
+    steer.limit(maxforce);  // Limit to maximum steering force
+    applyForce(steer);
+  }
+
+  void flee(PVector _target) {
+    PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
+    // Normalize desired and scale to maximum speed
+    desired.normalize();
+    desired.mult(-1*maxspeed);
+    // Steering = Desired minus velocity
+    PVector steer = PVector.sub(desired, velocity);
+    steer.limit(maxforce);  // Limit to maximum steering force
+    applyForce(steer);
+  }
+
+
+  void wander() {
+    if (wander == true) {
+      //wander
+      maxspeed = wander_maxspeed;
+      maxforce = wander_maxforce;
+
+      mode = "w";
+      float wanderR = 10;         // Radius for our "wander circle"
+      float wanderD = 50;         // Distance for our "wander circle"
+      float change = 0.01; //very interesting - tie this to a gene?
+      wandertheta += random(-change, change);     // Randomly change wander theta
+      // Now we have to calculate the new location to steer towards on the wander circle
+      PVector circleloc = velocity.get();    // Start with velocity
+      circleloc.normalize();            // Normalize to get heading
+      circleloc.mult(wanderD);          // Multiply by distance
+      circleloc.add(location);               // Make it relative to boid's location
+      float h = velocity.heading2D();        // We need to know the heading to offset wandertheta
+      PVector circleOffSet = new PVector(wanderR*cos(wandertheta+h), wanderR*sin(wandertheta+h));
+      PVector target = PVector.add(circleloc, circleOffSet);
+      //println("wander");
+      seek(target);
+    }
+  }
+
+  //what should I do in reference to all the things in the world - epic cheating, prefect knowledge
+  void decide(ArrayList<Something> _allThings) {
+
+    // Search for the closest (within threshold)
+    Something whichThing = null;
+    wander = true;
+    float recordDistance = 1000000;
+
+    //need to figure out how to not reset recordDistance to 1000000 if we're seeking a target
+
+    //distance from all things
+    for (Something s:_allThings) { //check dist to each thing - awareness
+      float targetDistance = dist(location.x, location.y, s.location.x, s.location.y);
+      if (targetDistance < 50 && s.active == true) { //outer threshold
+        if (targetDistance < recordDistance) {
+          //println("record distance is now "+recordDistance);
+          recordDistance = targetDistance;
+          whichThing = s;
+          wander = false;
+        }
+      }
+      // if you find something that is the closest
+      // do all the stuff you need to do
+      if (whichThing != null) {
+        if (targetDistance < 50 && targetDistance > 20 ) { //within sight but not at arrive
+          seek(whichThing.location);
+        }
+        //it's food
+        if (targetDistance <= 20 && whichThing.threat ==false) {
+          mode = "f";
+          arrive(whichThing.location);
+          whichThing.deplete();
+        }
+        //it's a threat
+        if (targetDistance <= 20 && whichThing.threat ==true) {
+          energy = whichThing.injur(energy);
+          println(energy);
+          fleeing = true;
+          maxspeed = flee_maxspeed;
+          maxforce = flee_maxforce;
+          mode = "!";
+          knownThreats.add(whichThing);
+          flee(whichThing.location);
+        }
+      }
+    }
+  }
+} //class ends
+
+/*      if (targetDistance>conf.scent_r || _s.alive == false) {
+ fleeing = false;
+ maxspeed = seek_maxspeed; 
+ maxforce = seek_maxforce;
+ //indicate our state
+ moodColour = colours[1];
+ flag = "w";
+ wander();
+ }
+ 
+ */

@@ -22,23 +22,19 @@ World w;
 Creature c;
 void setup() {
   font = loadFont("HelveticaNeue-Medium-12.vlw"); 
-  size(800, 600);
+  size(1166, 700);
   smooth();
   w = new World(); //create the world and set basic parameters
-  w.makeThings(5, false); //make food
-  w.makeThings(3, true); //make threats
-  w.makeHerds(2, 2);
-  c = new Creature(width/2, height/2);
+  w.makeThings(10, false); //make food
+  w.makeThings(10, true); //make threats
+  w.makeHerds(2, 5);
   debug = true;
 }
 
 void draw() {
   background(colours[0]);
-  w.render();
-  //c.update();
-  //c.render();
-  //c.seek(new PVector(mouseX, mouseY)); //follow the mouse for lulz
-  //c.wander();
+  w.render(); //render the world
+  //saveFrame("movie/test2_creatures####.png");
 }
 
 
@@ -54,7 +50,5 @@ void screenShot() {
   save("screenshots/"+d.toString()+"_"+sketchname+".png");
 }
 
-void mousePressed() {
-  Creature c = new Creature(width/2, height/2);
-}
+
 

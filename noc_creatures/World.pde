@@ -13,18 +13,28 @@ class World {
   World() {
   }
 
-  void makeThings(int _num, boolean _threat) {
+  void makeThings(int _num, boolean _threat) { //bloated
     for (int i=0;i<=_num-1;i++) {
       //make a food
       //should probably be in "clusters", so will make this noisy, not random
+      
+     /* float x = random(width);
+      float y = random(height);
+      float angle = random(TWO_PI);
+      float r = random(10); // use perlin noise based on the angle?
+        Food f = new Food(x+r*cos(angle),y+sin(angle));*/
+
       if (_threat == false) {
+        //pick a point and pick points within an offset
         Food f = new Food(random(width), random(height));
         allThings.add(f);
+        f.number = i;
       }
       else
       {
         Threat t = new Threat(random(width), random(height));
         allThings.add(t);
+        t.number = i;
       }
     }
   }
@@ -35,7 +45,8 @@ class World {
     for (int i=0;i<=_herds-1;i++) {
       Species s = new Species();
       allHerds.add(s);
-      s.makeCreatures(10, width/2, height/2);
+      Float startx = random(width); //doing this to start the herd at one x-loc
+      s.makeCreatures(_creatures, startx, height/2);
     }
   }
 

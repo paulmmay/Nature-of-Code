@@ -15,7 +15,7 @@ void setup() {
  // mySlider = new Slider();
   //mySlider.setupSlider("Radius");
   conf = new Config();
-  size(1366, 768);
+  size(1166, 668);
   //make 5
   for (int i=0;i<30;i++) {
     Vehicle v = new Vehicle(random(width), random(height));
