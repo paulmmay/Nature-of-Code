@@ -9,6 +9,7 @@ class Creature {
   /* ---------------- CONSTRUCTOR---------------------- */
 
   Creature(float _x, float _y) {
+    println(this+ " Hi, I'm a creature");
     location = new PVector(_x, _y);
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
@@ -18,6 +19,7 @@ class Creature {
     water = 100;
     mass = 100;
     report();
+    mode = "w";
   }
 
 
@@ -41,8 +43,11 @@ class Creature {
   //birthday and age and lifespan
   Date birthday;
   //attributes - these should be from species?
-  float maxspeed = 5; //can we change this based on how much feeding the creature has done?
-  float maxforce = 1; //
+  float maxspeed = 2; //can we change this based on how much feeding the creature has done?
+  float maxforce = 0.2; //
+  float wandertheta;
+  String mode;
+
 
 
   /* ---------------- ADMIN FUNCTIONS ---------------------- */
@@ -62,7 +67,7 @@ class Creature {
         ", water:"+water);
     }
   }
-  
+
   void update() {
     // add acceleration to velocity and 
     velocity.add(acceleration);
@@ -92,10 +97,44 @@ class Creature {
     steer.limit(maxforce);  // Limit to maximum steering force
     applyForce(steer);
   }
-  
-  
-  
 
+
+  void wander() {
+    //wander
+    mode = "w";
+    float wanderR = 25;         // Radius for our "wander circle"
+    float wanderD = 40;         // Distance for our "wander circle"
+    float change = 0.1; //very interesting - tie this to a gene?
+    wandertheta += random(-change, change);     // Randomly change wander theta
+    // Now we have to calculate the new location to steer towards on the wander circle
+    PVector circleloc = velocity.get();    // Start with velocity
+    circleloc.normalize();            // Normalize to get heading
+    circleloc.mult(wanderD);          // Multiply by distance
+    circleloc.add(location);               // Make it relative to boid's location
+    float h = velocity.heading2D();        // We need to know the heading to offset wandertheta
+    PVector circleOffSet = new PVector(wanderR*cos(wandertheta+h), wanderR*sin(wandertheta+h));
+    PVector target = PVector.add(circleloc, circleOffSet);
+    seek(target);
+  }
+
+  //what should I do in reference to all the things in the world - epic cheating, prefect knowledge
+  void decide(ArrayList<Something> _allThings) {
+    //distance from things
+    for (Something s:_allThings) { //check dist to each thing - awareness
+      println(PVector.sub(location,s.location));
+      println(this);
+    }
+  }
+
+
+
+  void flag() {
+    //display useful information about the creature
+    //abstracting this as it may be useful elsewhere
+    textFont(font);
+    fill(colours[8]); 
+    text(mode, location.x+20, location.y-10, 15, 20);
+  }
 
 
   void render() {
@@ -107,6 +146,10 @@ class Creature {
       endShape();
       // Draw a triangle rotated in the direction of velocity
       float theta = velocity.heading2D() + PI/2;
+
+      //flag
+      flag();
+
       noStroke();
       pushMatrix();
       translate(location.x, location.y);

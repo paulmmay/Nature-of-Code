@@ -2,11 +2,10 @@ class World {
 
   //has species
   ArrayList<Species> allHerds = new ArrayList();
-  //has physical features
 
   //has terrain, some of it edible
   ArrayList<Something> allThings = new ArrayList();
-
+  PFont font = loadFont("HelveticaNeue-Medium-12.vlw"); 
   //has weather
 
 
@@ -31,13 +30,29 @@ class World {
   }
 
 
+  void makeHerds(int _herds, int _creatures) {
+    //make herds with a number of creatures
+    for (int i=0;i<=_herds-1;i++) {
+      Species s = new Species();
+      allHerds.add(s);
+      s.makeCreatures(10, width/2, height/2);
+    }
+  }
 
 
   void render() {
-
     //draw the objects in our world - food, threats etc.
     for (Something s:allThings) {
       s.render();
+    }
+    //pass all the objects to all the creatures - right approach?
+    for (Species h:allHerds) {
+      for (Creature c:h.allCreatures) { //for each herd, each creature in the herd
+        c.update();
+        c.render();
+        c.wander();
+        c.decide(allThings);
+      }
     }
   }
 }
