@@ -17,10 +17,15 @@ class Something {
   void render() {
     if (active) { //don't draw me if I've been depleted
       fill(myColour);
-      ellipse(location.x, location.y, mySize, mySize);
+      if (!threat) {
+        ellipse(location.x, location.y, foodSupply, foodSupply);
+      }
+      else {
+        ellipse(location.x, location.y, mySize, mySize);
+      }
       fill(colours[8]);
       fill(colours[8]); 
-      text(Float.toString(foodSupply), location.x+5, location.y-5, 10);
+      //text(Float.toString(foodSupply), location.x+5, location.y-5, 10);
       stroke(colours[3]);
       noFill();
       ellipse(location.x, location.y, 100, 100); //twice the smell distance of the creature - hacky for now
@@ -38,7 +43,7 @@ class Something {
   }
 
   float injur(float _energy) {
-    return _energy-1;
+    return _energy-2;
   }
 }
 

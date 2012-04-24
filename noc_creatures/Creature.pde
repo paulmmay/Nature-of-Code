@@ -21,7 +21,7 @@ class Creature {
   //where am i
   PVector location, velocity, acceleration;
   ArrayList<Something> knownThreats = new ArrayList();
-  ArrayList<Something> knownFood = new ArrayList();
+  ArrayList<Something> knownFoods = new ArrayList();
   //health
   float energy, water, mass, maxenergy, lifespan; //how much energy do i have
   int h = 9;
@@ -35,6 +35,10 @@ class Creature {
   float wander_maxforce = 0.1;
   float flee_maxspeed = 10;
   float flee_maxforce = 2;
+  float calculatedMaxSpeed = 0;
+  float calculatedMaxForce = 0;
+
+  //speeds should be a factor of my age and energy
 
   float wandertheta;
   String mode;
@@ -64,10 +68,10 @@ class Creature {
   }
 
   /* ---------------- ADMIN FUNCTIONS ---------------------- */
-  int getAge() {
-    //get the creature's age in seconds
+  int getAge(int factor) {
+    //get the creature's age in milliseconds divided by a factor. if the factor is 1000 we will return the age in seconds.
     Date now = new Date();
-    int age = int((now.getTime()-birthday.getTime())/1000);
+    int age = int((now.getTime()-birthday.getTime())/factor);
     return age;
   }
 
@@ -75,13 +79,15 @@ class Creature {
     //spit out information about me
     if (debug) {
       println(this+" (Creature)"+
-        " age:"+getAge()+
+        " age:"+getAge(1000)+
         ", energy:"+energy+
         ", water:"+water);
     }
   }
 
   void update() {
+    // calculatedMaxSpeed = getAge(1000)*(energy/1000);
+    // maxspeed = maxspeed / calculatedMaxSpeed;
 
     //default is to wander
     // wander = true;
@@ -98,15 +104,32 @@ class Creature {
     //display useful information about the creature
     //abstracting this as it may be useful elsewhere
     textFont(font);
+    int offset = 20;
+    int space = 10;
     fill(colours[8]); 
-    text(mode, location.x+20, location.y-10, 15, 20);
+    text(mode, location.x+offset, location.y);
     fill(colours[8], 120);
-    text(Float.toString(energy), location.x+30, location.y-10, 40, 20);
+    //text(Float.toString(energy), location.x+offset, location.y+3*space);
+   
+   
+    String threatChit = "";
+    String foodChit="";
+    for (int i=0;i<knownThreats.size();i++) {
+      threatChit+="•";
+    }
+    for (int i=0;i<knownFoods.size();i++) {
+      foodChit+="•";
+    }
+    
+    fill(colours[7]); //red
+    text(threatChit, location.x+offset, location.y-2*space);
+    fill(colours[6]); //green
+    text(foodChit, location.x+offset, location.y-1*space);
   }
 
 
   void render() {
-    int r = 5;
+    float r = energy/20;
 
     if (debug) {
       //draw the trangular creature boid 
@@ -172,7 +195,7 @@ class Creature {
     PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
     // Normalize desired and scale to maximum speed
     desired.normalize();
-    desired.mult(-1*maxspeed);
+    desired.mult(-1*random(1)*maxspeed);
     // Steering = Desired minus velocity
     PVector steer = PVector.sub(desired, velocity);
     steer.limit(maxforce);  // Limit to maximum steering force
@@ -186,6 +209,16 @@ class Creature {
   void age() {
     //my energy depletes over time
     if (energy > 0) {
+      energy-=0.001;
+    }
+    else {
+      alive = false;
+    }
+  }
+
+  void tire() {
+    //my energy depletes over time
+    if (energy > 0) {
       energy-=0.01;
     }
     else {
@@ -193,17 +226,20 @@ class Creature {
     }
   }
 
+
+
   void wander() {
     fleeing = false;
+    //tire();
     if (wander == true && fleeing == false) {
       //wander
       maxspeed = wander_maxspeed;
       maxforce = wander_maxforce;
 
-      mode = "W";
+      mode = "w";
       float wanderR = 10;         // Radius for our "wander circle"
       float wanderD = 50;         // Distance for our "wander circle"
-      float change = 0.01; //very interesting - tie this to a gene?
+      float change = 0.008; //very interesting - tie this to a gene?
       wandertheta += random(-change, change);     // Randomly change wander theta
       // Now we have to calculate the new location to steer towards on the wander circle
       PVector circleloc = velocity.get();    // Start with velocity
@@ -275,21 +311,19 @@ class Creature {
       if (whichThing != null) {
         if (targetDistance < 50 && targetDistance > 20 && !knownThreats.contains(whichThing)) { //within sight but not at arrive
           seek(whichThing.location);
+          //when else should I seek? when I am hungry
         }
         //it's food
         if (targetDistance <= 20 && whichThing.threat ==false) {
-          mode = "F";
-          //arrive(whichThing.location);
-          if (energy <=99) {
-            //feed so long as I'm not full
-            energy+=whichThing.deplete();
-            println("feeding");
+          mode = "f";
+          if (!knownFoods.contains(whichThing)) {
+            knownFoods.add(whichThing);
           }
-          else {
-            //I should leave the food source now
-            println("I'm full");
-          }
+          arrive(whichThing.location);
+          energy+=whichThing.deplete();
+          println("feeding");
         }
+
         //it's a threat - i already know about it or I can see it up close
         else if ((targetDistance < 50 && knownThreats.contains(whichThing)) || (targetDistance <= 20 && whichThing.threat == true)) {
           //fleeing = true;
@@ -297,7 +331,9 @@ class Creature {
           maxspeed = flee_maxspeed;
           maxforce = flee_maxforce;
           mode = "!";
-          knownThreats.add(whichThing);
+          if (!knownThreats.contains(whichThing)) {
+            knownThreats.add(whichThing);
+          }
           println("FLEE " + frameCount);
           flee(whichThing.location);
         }
@@ -306,14 +342,3 @@ class Creature {
   }
 } //class ends
 
-/*      if (targetDistance>conf.scent_r || _s.alive == false) {
- fleeing = false;
- maxspeed = seek_maxspeed; 
- maxforce = seek_maxforce;
- //indicate our state
- moodColour = colours[1];
- flag = "w";
- wander();
- }
- 
- */

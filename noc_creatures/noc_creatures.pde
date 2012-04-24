@@ -26,9 +26,9 @@ void setup() {
   //size(900, 400);
   smooth();
   w = new World(); //create the world and set basic parameters
-  w.makeThings(5, false); //make food
-  w.makeThings(3, true); //make threats
-  w.makeHerds(4, 2);
+  w.makeThings(6, false); //make food
+  w.makeThings(2, true); //make threats
+  w.makeHerds(2, 4);
   debug = true;
 }
 
