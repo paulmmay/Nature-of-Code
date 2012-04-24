@@ -17,12 +17,12 @@ class World {
     for (int i=0;i<=_num-1;i++) {
       //make a food
       //should probably be in "clusters", so will make this noisy, not random
-      
-     /* float x = random(width);
-      float y = random(height);
-      float angle = random(TWO_PI);
-      float r = random(10); // use perlin noise based on the angle?
-        Food f = new Food(x+r*cos(angle),y+sin(angle));*/
+
+      /* float x = random(width);
+       float y = random(height);
+       float angle = random(TWO_PI);
+       float r = random(10); // use perlin noise based on the angle?
+       Food f = new Food(x+r*cos(angle),y+sin(angle));*/
 
       if (_threat == false) {
         //pick a point and pick points within an offset
@@ -57,12 +57,14 @@ class World {
     //pass all the objects to all the creatures - right approach?
     for (Species h:allHerds) {
       for (Creature c:h.allCreatures) { //for each herd, each creature in the herd
-        c.update();
-        c.age();
-        c.render();
-        c.wander();
-        c.boundaries();
-        c.decide(allThings);
+        if (c.alive == true) { //creatures can die, when they do - don't show them anymore
+          c.update();
+          c.age();
+          c.render();
+          c.wander();
+          c.boundaries();
+          c.decide(allThings);
+        }
       }
     }
   }

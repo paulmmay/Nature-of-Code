@@ -23,7 +23,7 @@ class Creature {
   ArrayList<Something> knownThreats = new ArrayList();
   ArrayList<Something> knownFood = new ArrayList();
   //health
-  float energy, water, mass; //how much energy do i have
+  float energy, water, mass, maxenergy, lifespan; //how much energy do i have
   int h = 9;
   //birthday and age and lifespan
   Date birthday;
@@ -34,7 +34,7 @@ class Creature {
   float wander_maxspeed = 2;
   float wander_maxforce = 0.1;
   float flee_maxspeed = 10;
-  float flee_maxforce = 1;
+  float flee_maxforce = 2;
 
   float wandertheta;
   String mode;
@@ -42,6 +42,7 @@ class Creature {
 
   //states
   Boolean wander = true;
+  Boolean alive = true;
   Boolean seek = false;
   Boolean fleeing = false;
 
@@ -55,6 +56,7 @@ class Creature {
     //set up basic parameters / reset
     birthday = new Date();
     energy = 100;
+    maxenergy = 100; //what is the most energy I can have? 
     water = 100;
     mass = 100;
     report();
@@ -115,7 +117,6 @@ class Creature {
 
       //flag
       flag();
-
       noStroke();
       pushMatrix();
       translate(location.x, location.y);
@@ -167,6 +168,7 @@ class Creature {
   }
 
   void flee(PVector _target) {
+    //println("flee");
     PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
     // Normalize desired and scale to maximum speed
     desired.normalize();
@@ -177,13 +179,23 @@ class Creature {
     applyForce(steer);
   }
 
+  void leave() {
+    //leave the food source if I am full
+  }
+
   void age() {
     //my energy depletes over time
-    energy-=0.001;
+    if (energy > 0) {
+      energy-=0.01;
+    }
+    else {
+      alive = false;
+    }
   }
 
   void wander() {
-    if (wander == true) {
+    fleeing = false;
+    if (wander == true && fleeing == false) {
       //wander
       maxspeed = wander_maxspeed;
       maxforce = wander_maxforce;
@@ -261,26 +273,32 @@ class Creature {
       // if you find something that is the closest
       // do all the stuff you need to do
       if (whichThing != null) {
-        if (targetDistance < 50 && targetDistance > 20 ) { //within sight but not at arrive
+        if (targetDistance < 50 && targetDistance > 20 && !knownThreats.contains(whichThing)) { //within sight but not at arrive
           seek(whichThing.location);
         }
         //it's food
         if (targetDistance <= 20 && whichThing.threat ==false) {
           mode = "F";
-          arrive(whichThing.location);
-          while (energy <=100) {
+          //arrive(whichThing.location);
+          if (energy <=99) {
+            //feed so long as I'm not full
             energy+=whichThing.deplete();
-          } //feed so long as I'm not full
+            println("feeding");
+          }
+          else {
+            //I should leave the food source now
+            println("I'm full");
+          }
         }
-        //it's a threat
-        if (targetDistance <= 20 && whichThing.threat ==true) {
+        //it's a threat - i already know about it or I can see it up close
+        else if ((targetDistance < 50 && knownThreats.contains(whichThing)) || (targetDistance <= 20 && whichThing.threat == true)) {
+          //fleeing = true;
           energy = whichThing.injur(energy);
-          println(energy);
-          fleeing = true;
           maxspeed = flee_maxspeed;
           maxforce = flee_maxforce;
           mode = "!";
           knownThreats.add(whichThing);
+          println("FLEE " + frameCount);
           flee(whichThing.location);
         }
       }

@@ -38,7 +38,7 @@ class Something {
   }
 
   float injur(float _energy) {
-    return _energy-0.1;
+    return _energy-1;
   }
 }
 
