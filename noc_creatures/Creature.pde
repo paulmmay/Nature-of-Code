@@ -37,6 +37,7 @@ class Creature {
   float flee_maxforce = 2;
   float calculatedMaxSpeed = 0;
   float calculatedMaxForce = 0;
+  Species mySpecies;
 
   //speeds should be a factor of my age and energy
 
@@ -52,7 +53,8 @@ class Creature {
 
   /* ---------------- CONSTRUCTOR---------------------- */
 
-  Creature(float _x, float _y) {
+  Creature(float _x, float _y, Species _s) {
+    mySpecies = _s;
     println(this+ " Hi, I'm a creature");
     location = new PVector(_x, _y);
     acceleration = new PVector(0, 0);
@@ -143,7 +145,7 @@ class Creature {
       noStroke();
       pushMatrix();
       translate(location.x, location.y);
-      fill(colours[7]);
+      fill(mySpecies.colour);
       rotate(theta);
       beginShape();
       vertex(0, -r*2);
