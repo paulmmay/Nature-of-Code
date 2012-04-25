@@ -5,7 +5,9 @@ class Species {
   //all the creatures in this herd share the same basic attributes
   //colour
   //speed
-  color[] possibleColours = {#9BD49D,#D4E1B5,#F6BA40,#DD5F22,#BF282D};
+  color[] possibleColours = {
+    #9BD49D, #D4E1B5, #F6BA40, #DD5F22, #BF282D, #3C7B37, #438A64, #498A3E, #66C256
+  };
 
 
   Species() {

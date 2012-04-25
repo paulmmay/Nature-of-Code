@@ -3,7 +3,7 @@ class Food extends Something {
   /* ---------------- CONSTRUCTOR---------------------- */
   Food(Float _x, Float _y) {
     location = new PVector(_x, _y);
-    foodSupply = 20;
+    foodSupply = 50;
     threat = false;
     myColour = colours[6];
     mySize = 10;  

@@ -32,7 +32,7 @@ class Creature {
   float maxforce = 0; //
   //speeds and forces based on current state
   float wander_maxspeed = 2;
-  float wander_maxforce = 0.1;
+  float wander_maxforce = 0.3;
   float flee_maxspeed = 10;
   float flee_maxforce = 2;
   float calculatedMaxSpeed = 0;
@@ -72,6 +72,7 @@ class Creature {
   /* ---------------- ADMIN FUNCTIONS ---------------------- */
   int getAge(int factor) {
     //get the creature's age in milliseconds divided by a factor. if the factor is 1000 we will return the age in seconds.
+    //this could be done with framecount I suppose
     Date now = new Date();
     int age = int((now.getTime()-birthday.getTime())/factor);
     return age;
@@ -112,8 +113,8 @@ class Creature {
     text(mode, location.x+offset, location.y);
     fill(colours[8], 120);
     //text(Float.toString(energy), location.x+offset, location.y+3*space);
-   
-   
+
+
     String threatChit = "";
     String foodChit="";
     for (int i=0;i<knownThreats.size();i++) {
@@ -122,7 +123,7 @@ class Creature {
     for (int i=0;i<knownFoods.size();i++) {
       foodChit+="•";
     }
-    
+
     fill(colours[7]); //red
     text(threatChit, location.x+offset, location.y-2*space);
     fill(colours[6]); //green
@@ -161,6 +162,15 @@ class Creature {
 
   /* ---------------- BEHAVIOURS ---------------------- */
 
+  /*
+   Next:
+   avoid other species
+   follow own species
+   food respawns
+   tie speed and agility to energy level
+   better wandering
+   reproduction 
+   */
 
   void applyForce(PVector force) {
     // We could add mass here if we want A = F / M
@@ -211,7 +221,7 @@ class Creature {
   void age() {
     //my energy depletes over time
     if (energy > 0) {
-      energy-=0.001;
+      energy-=0.002;
     }
     else {
       alive = false;
@@ -231,8 +241,9 @@ class Creature {
 
 
   void wander() {
+    //if I am wandering, I am getting tired
+    tire();
     fleeing = false;
-    //tire();
     if (wander == true && fleeing == false) {
       //wander
       maxspeed = wander_maxspeed;
@@ -323,7 +334,7 @@ class Creature {
           }
           arrive(whichThing.location);
           energy+=whichThing.deplete();
-          println("feeding");
+          //println("feeding");
         }
 
         //it's a threat - i already know about it or I can see it up close
@@ -336,7 +347,7 @@ class Creature {
           if (!knownThreats.contains(whichThing)) {
             knownThreats.add(whichThing);
           }
-          println("FLEE " + frameCount);
+         // println("FLEE " + frameCount);
           flee(whichThing.location);
         }
       }

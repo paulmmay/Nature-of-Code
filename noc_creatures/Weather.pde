@@ -1,9 +1,7 @@
-class Weather{
+class Weather {
 
 
-Weather(){
-
+  Weather() {
+  }
 }
 
-
-}

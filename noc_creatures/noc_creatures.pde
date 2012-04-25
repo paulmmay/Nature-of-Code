@@ -26,8 +26,8 @@ void setup() {
   //size(900, 400);
   smooth();
   w = new World(); //create the world and set basic parameters
-  w.makeThings(6, false); //make food
-  w.makeThings(2, true); //make threats
+  w.makeThings(10, false); //make food
+  w.makeThings(5, true); //make threats
   w.makeHerds(2, 4);
   debug = true;
 }
@@ -35,7 +35,7 @@ void setup() {
 void draw() {
   background(colours[0]);
   w.render(); //render the world
-  //saveFrame("movie/feedingfleeing_creatures####.png");
+  //saveFrame("movie/chubby_creatures####.png");
 }
 
 
@@ -50,6 +50,5 @@ void screenShot() {
   Date d = new Date();
   save("screenshots/"+d.toString()+"_"+sketchname+".png");
 }
-
 
 

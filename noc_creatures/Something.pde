@@ -26,16 +26,16 @@ class Something {
       fill(colours[8]);
       fill(colours[8]); 
       //text(Float.toString(foodSupply), location.x+5, location.y-5, 10);
-      stroke(colours[3]);
+      //stroke(colours[3]);
       noFill();
-      ellipse(location.x, location.y, 100, 100); //twice the smell distance of the creature - hacky for now
+      //ellipse(location.x, location.y, 100, 100); //twice the smell distance of the creature - hacky for now
     }
   }
 
   float deplete() {
     float chunk = 0.1;
     foodSupply=foodSupply-chunk;
-    println(foodSupply);
+    // println(foodSupply);
     if (foodSupply < 0) {
       this.active = false;
     }
