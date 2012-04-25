@@ -26,16 +26,16 @@ void setup() {
   //size(900, 400);
   smooth();
   w = new World(); //create the world and set basic parameters
-  w.makeThings(10, false); //make food
-  w.makeThings(5, true); //make threats
-  w.makeHerds(2, 4);
+  w.makeThings(20, false); //make food
+  w.makeThings(10, true); //make threats
+  w.makeHerds(150, 1);
   debug = true;
 }
 
 void draw() {
   background(colours[0]);
   w.render(); //render the world
-  //saveFrame("movie/regrowth_creatures####.png");
+  //saveFrame("movie/creatures_popcrash_####.png");
 }
 
 
@@ -43,6 +43,10 @@ void draw() {
 
 void keyPressed() {
   screenShot();
+}
+
+void mousePressed(){
+w.makeHerds(1, 1);
 }
 
 void screenShot() {

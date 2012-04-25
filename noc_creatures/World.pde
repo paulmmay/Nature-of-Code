@@ -26,12 +26,12 @@ class World {
 
       if (_threat == false) {
         //pick a point and pick points within an offset
-        Food f = new Food(random(width), random(height));
+        Food f = new Food(random(40,width-40), random(40,height-40));
         allThings.add(f);
       }
       else
       {
-        Threat t = new Threat(random(width), random(height));
+        Threat t = new Threat(random(40,width-40), random(40,height-40));
         allThings.add(t);
       }
     }
@@ -50,6 +50,7 @@ class World {
 
 
   void render() {
+    int total = 0;
     //draw the objects in our world - food, threats etc.
     for (Something s:allThings) {
       s.render();

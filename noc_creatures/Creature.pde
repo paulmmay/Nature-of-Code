@@ -35,6 +35,7 @@ class Creature {
   float wander_maxforce = 0.3;
   float flee_maxspeed = 10;
   float flee_maxforce = 2;
+  float minenergy = 10;
   float calculatedMaxSpeed = 0;
   float calculatedMaxForce = 0;
   Species mySpecies;
@@ -89,15 +90,15 @@ class Creature {
   }
 
   void update() {
-    // calculatedMaxSpeed = getAge(1000)*(energy/1000);
-    // maxspeed = maxspeed / calculatedMaxSpeed;
-
+    calculatedMaxSpeed = maxspeed*energy/100;
+   // calculatedMaxForce = maxforce*energy/20;
+    //println(calculatedMaxForce);
     //default is to wander
     // wander = true;
     // add acceleration to velocity and 
     velocity.add(acceleration);
     // Limit speed
-    velocity.limit(maxspeed);
+    velocity.limit(calculatedMaxSpeed);
     location.add(velocity);
     // Reset accelerationelertion to 0 each cycle
     acceleration.mult(0);
@@ -134,9 +135,8 @@ class Creature {
   void render() {
     float r = energy/20;
 
-    //max for r?
+    //max for r? cap at 7 hacky
     if (r>7) {
-      println("size max");
       r = 7.0;
     }
 
@@ -148,7 +148,7 @@ class Creature {
       float theta = velocity.heading2D() + PI/2;
 
       //flag
-      flag();
+      //flag();
       noStroke();
       pushMatrix();
       translate(location.x, location.y);
@@ -173,9 +173,10 @@ class Creature {
    avoid other species
    follow own species
    food respawns
-   tie speed and agility to energy level
    better wandering
    reproduction 
+   
+   next: tie speed and agility to energy level
    */
 
   void applyForce(PVector force) {
@@ -200,7 +201,7 @@ class Creature {
     float d = desired.mag();
     // Normalize desired and scale with arbitrary damping within 100 pixels
     desired.normalize();
-    float m = map(d, 0, 100, 0, maxspeed);
+    float m = map(d, 0, 100, 0, calculatedMaxSpeed);
     desired.mult(m);
     // Steering = Desired minus Velocity
     PVector steer = PVector.sub(desired, velocity);
@@ -213,7 +214,7 @@ class Creature {
     PVector desired = PVector.sub(_target, location);  // A vector pointing from the location to the target
     // Normalize desired and scale to maximum speed
     desired.normalize();
-    desired.mult(-1*random(1)*maxspeed);
+    desired.mult(-1*random(1)*calculatedMaxSpeed);
     // Steering = Desired minus velocity
     PVector steer = PVector.sub(desired, velocity);
     steer.limit(maxforce);  // Limit to maximum steering force
@@ -226,21 +227,23 @@ class Creature {
 
   void age() {
     //my energy depletes over time
-    if (energy > 0) {
-      energy-=0.002;
+    if (energy > minenergy) {
+      energy-=0.008;
     }
     else {
       alive = false;
+      println("i died");
     }
   }
 
   void tire() {
     //my energy depletes over time
-    if (energy > 0) {
-      energy-=0.01;
+    if (energy > minenergy) {
+      energy-=0.025;
     }
     else {
       alive = false;
+       println("i died");
     }
   }
 
@@ -279,11 +282,11 @@ class Creature {
 
     if (location.x < 20) {
       mode = "!";
-      desired = new PVector(maxspeed, velocity.y);
+      desired = new PVector(calculatedMaxSpeed, velocity.y);
     } 
     else if (location.x > width - 20) {
       mode = "!";
-      desired = new PVector(-maxspeed, velocity.y);
+      desired = new PVector(-calculatedMaxSpeed, velocity.y);
     } 
 
     if (location.y < 20) {
@@ -297,7 +300,7 @@ class Creature {
 
     if (desired != null) {
       desired.normalize();
-      desired.mult(maxspeed);
+      desired.mult(calculatedMaxSpeed);
       PVector steer = PVector.sub(desired, velocity);
       steer.limit(maxforce);
       applyForce(steer);
@@ -329,6 +332,11 @@ class Creature {
       // do all the stuff you need to do
       if (whichThing != null) {
         if (targetDistance < 50 && targetDistance > 20 && !knownThreats.contains(whichThing)) { //within sight but not at arrive
+          /*
+          //draw a line between me and the thing i seek. very handy to see the changes in creatures' range of vision
+          strokeWeight(1);
+          stroke(200);
+          line(this.location.x, this.location.y, whichThing.location.x, whichThing.location.y);*/
           seek(whichThing.location);
           //when else should I seek? when I am hungry
         }
