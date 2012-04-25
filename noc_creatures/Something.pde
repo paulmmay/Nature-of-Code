@@ -4,6 +4,7 @@ class Something {
   Boolean threat;
   Boolean active;
   float foodSupply;
+  float foodLimit;
   float mySize;
   int number = 0;
 
@@ -15,6 +16,8 @@ class Something {
 
 
   void render() {
+    reGrow();
+    noStroke();
     if (active) { //don't draw me if I've been depleted
       fill(myColour);
       if (!threat) {
@@ -29,6 +32,16 @@ class Something {
       //stroke(colours[3]);
       noFill();
       //ellipse(location.x, location.y, 100, 100); //twice the smell distance of the creature - hacky for now
+    }
+  }
+
+  void reGrow() {
+    //food sources will regrow slowly and become active when they get over a minimum size.
+    if (foodSupply > 3) {
+      this.active = true;
+    }
+    if (foodSupply < foodLimit) {
+      foodSupply+=0.01;
     }
   }
 
