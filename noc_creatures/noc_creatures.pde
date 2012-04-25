@@ -35,7 +35,7 @@ void setup() {
 void draw() {
   background(colours[0]);
   w.render(); //render the world
-  //saveFrame("movie/chubby_creatures####.png");
+  //saveFrame("movie/regrowth_creatures####.png");
 }
 
 

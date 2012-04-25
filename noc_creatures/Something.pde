@@ -37,11 +37,12 @@ class Something {
 
   void reGrow() {
     //food sources will regrow slowly and become active when they get over a minimum size.
-    if (foodSupply > 3) {
+    if (foodSupply > 5) {
       this.active = true;
     }
+    //regrowth rate
     if (foodSupply < foodLimit) {
-      foodSupply+=0.01;
+      foodSupply+=0.02;
     }
   }
 

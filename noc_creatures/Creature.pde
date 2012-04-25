@@ -134,6 +134,12 @@ class Creature {
   void render() {
     float r = energy/20;
 
+    //max for r?
+    if (r>7) {
+      println("size max");
+      r = 7.0;
+    }
+
     if (debug) {
       //draw the trangular creature boid 
       beginShape();
@@ -347,7 +353,7 @@ class Creature {
           if (!knownThreats.contains(whichThing)) {
             knownThreats.add(whichThing);
           }
-         // println("FLEE " + frameCount);
+          // println("FLEE " + frameCount);
           flee(whichThing.location);
         }
       }
