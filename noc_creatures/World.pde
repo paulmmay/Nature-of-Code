@@ -26,12 +26,12 @@ class World {
 
       if (_threat == false) {
         //pick a point and pick points within an offset
-        Food f = new Food(random(40,width-40), random(40,height-40));
+        Food f = new Food(random(40, width-40), random(40, height-40));
         allThings.add(f);
       }
       else
       {
-        Threat t = new Threat(random(40,width-40), random(40,height-40));
+        Threat t = new Threat(random(40, width-40), random(40, height-40));
         allThings.add(t);
       }
     }
@@ -56,7 +56,7 @@ class World {
       s.render();
     }
     //pass all the objects to all the creatures - right approach?
-    for (Species h:allHerds) {
+    for (Species h:allHerds) {     
       for (Creature c:h.allCreatures) { //for each herd, each creature in the herd
         if (c.alive == true) { //creatures can die, when they do - don't show them anymore
           c.update();
@@ -65,6 +65,7 @@ class World {
           c.wander();
           c.boundaries();
           c.decide(allThings);
+          c.friendly(h.allCreatures);
         }
       }
     }

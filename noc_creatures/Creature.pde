@@ -68,6 +68,7 @@ class Creature {
     mass = 100;
     report();
     mode = "w";
+    println(mySpecies);
   }
 
   /* ---------------- ADMIN FUNCTIONS ---------------------- */
@@ -90,12 +91,9 @@ class Creature {
   }
 
   void update() {
-    calculatedMaxSpeed = maxspeed*energy/100;
-   // calculatedMaxForce = maxforce*energy/20;
-    //println(calculatedMaxForce);
-    //default is to wander
-    // wander = true;
-    // add acceleration to velocity and 
+    calculatedMaxSpeed = maxspeed*energy/200;
+    //  println(calculatedMaxSpeed);
+
     velocity.add(acceleration);
     // Limit speed
     velocity.limit(calculatedMaxSpeed);
@@ -243,11 +241,24 @@ class Creature {
     }
     else {
       alive = false;
-       println("i died");
+      println("i died");
     }
   }
 
-
+  void friendly(ArrayList<Creature> _allCreatures) {
+    //make a decision based on the locations of the other creatures
+    for (Creature c:_allCreatures) {
+      //calculate the distance between me and the other creature
+      float distance = PVector.dist(location, c.location);
+      // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
+      if (distance < 500 && distance > 200) {
+        stroke(colours[1]);
+        strokeWeight(1);
+        line(location.x, location.y, c.location.x, c.location.y);
+        seek(c.location);
+      }
+    }
+  }
 
   void wander() {
     //if I am wandering, I am getting tired
@@ -334,9 +345,9 @@ class Creature {
         if (targetDistance < 50 && targetDistance > 20 && !knownThreats.contains(whichThing)) { //within sight but not at arrive
           /*
           //draw a line between me and the thing i seek. very handy to see the changes in creatures' range of vision
-          strokeWeight(1);
-          stroke(200);
-          line(this.location.x, this.location.y, whichThing.location.x, whichThing.location.y);*/
+           strokeWeight(1);
+           stroke(200);
+           line(this.location.x, this.location.y, whichThing.location.x, whichThing.location.y);*/
           seek(whichThing.location);
           //when else should I seek? when I am hungry
         }

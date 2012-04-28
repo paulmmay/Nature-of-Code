@@ -26,16 +26,16 @@ void setup() {
   //size(900, 400);
   smooth();
   w = new World(); //create the world and set basic parameters
-  w.makeThings(20, false); //make food
-  w.makeThings(10, true); //make threats
-  w.makeHerds(150, 1);
+  w.makeThings(9, false); //make food
+  w.makeThings(3, true); //make threats
+  w.makeHerds(2, 10);
   debug = true;
 }
 
 void draw() {
   background(colours[0]);
   w.render(); //render the world
-  //saveFrame("movie/creatures_popcrash_####.png");
+  //saveFrame("movie/"+sketchname+"_"+"sticktogether"+"####.png");
 }
 
 
