@@ -26,7 +26,6 @@ class Creature {
   float energy, water, mass, maxenergy, lifespan; //how much energy do i have
   int h = 9;
   //birthday and age and lifespan
-  Date birthday;
   //attributes - these should be from species?
   float maxspeed = 0; //can we change this based on how much feeding the creature has done?
   float maxforce = 0; //
@@ -37,6 +36,7 @@ class Creature {
   float flee_maxforce = 2;
   float minenergy = 10;
   float calculatedMaxSpeed = 0;
+  int birthday;
   float calculatedMaxForce = 0;
   Species mySpecies;
 
@@ -61,7 +61,6 @@ class Creature {
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
     //set up basic parameters / reset
-    birthday = new Date();
     energy = 100;
     maxenergy = 100; //what is the most energy I can have? 
     water = 100;
@@ -69,14 +68,14 @@ class Creature {
     report();
     mode = "w";
     println(mySpecies);
+    birthday = millis();
+    println(birthday);
   }
 
   /* ---------------- ADMIN FUNCTIONS ---------------------- */
   int getAge(int factor) {
     //get the creature's age in milliseconds divided by a factor. if the factor is 1000 we will return the age in seconds.
-    //this could be done with framecount I suppose
-    Date now = new Date();
-    int age = int((now.getTime()-birthday.getTime())/factor);
+    int age = (millis()-birthday)/factor;
     return age;
   }
 
@@ -150,7 +149,13 @@ class Creature {
       noStroke();
       pushMatrix();
       translate(location.x, location.y);
-      fill(mySpecies.colour);
+      int myAge = getAge(1000);
+      if (myAge>=12) {
+        fill(mySpecies.colour);
+      }
+      else {
+        fill(mySpecies.colour,30+myAge*20);
+      };
       rotate(theta);
       beginShape();
       vertex(0, -r*2);
@@ -226,7 +231,7 @@ class Creature {
   void age() {
     //my energy depletes over time
     if (energy > minenergy) {
-      energy-=0.002;
+      energy-=0.004;
     }
     else {
       alive = false;
@@ -237,7 +242,7 @@ class Creature {
   void tire() {
     //my energy depletes over time
     if (energy > minenergy) {
-      energy-=0.0025;
+      energy-=0.006;
     }
     else {
       alive = false;
@@ -254,15 +259,16 @@ class Creature {
         //calculate the distance between me and the other creature - if it's alive
         float distance = PVector.dist(location, c.location);
         // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-        if (getAge(1000) > 30 && distance < 50) { //some sort of sexy distance
-          stroke(colours[3]);
-          strokeWeight(1);
-          line(location.x, location.y, c.location.x, c.location.y);
+        if (getAge(1000) > 30 && distance < 50 && (energy+c.energy) > 250) { //some sort of sexy distance
+          //println(energy);
+          //stroke(colours[3]);
+          //strokeWeight(1);
+          //line(location.x, location.y, c.location.x, c.location.y);
           //mate
           if (random(1)>0.9995) { //happenstance
-            stroke(colours[1]);
-            strokeWeight(1);
-            line(location.x, location.y, c.location.x, c.location.y);
+            //stroke(colours[1]);
+            //strokeWeight(1);
+            //line(location.x, location.y, c.location.x, c.location.y);
             println("hey there - let's mate");
             seek(c.location);
             maxspeed = maxspeed/2;
