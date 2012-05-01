@@ -44,7 +44,7 @@ class World {
       Species s = new Species();
       allHerds.add(s);
       Float startx = random(width); //doing this to start the herd at one x-loc
-      s.makeCreatures(_creatures, startx, height/2);
+      s.makeCreatures(_creatures, startx, height/2,1);
     }
   }
 

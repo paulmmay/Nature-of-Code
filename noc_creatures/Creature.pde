@@ -24,7 +24,7 @@ class Creature {
   ArrayList<Something> knownFoods = new ArrayList();
   //health
   Gene g;
-  
+
   int h = 9;
   //birthday and age and lifespan
   //attributes - these should be from species?
@@ -50,8 +50,8 @@ class Creature {
 
   /* ---------------- CONSTRUCTOR---------------------- */
 
-  Creature(float _x, float _y, Species _s) {
-    g = new Gene();
+  Creature(float _x, float _y, int _generation, Species _s) {
+    g = new Gene(_generation);
     mySpecies = _s;
     println(this+ " Hi, I'm a creature");
     location = new PVector(_x, _y);
@@ -99,9 +99,11 @@ class Creature {
     //abstracting this as it may be useful elsewhere
     textFont(font);
     int offset = 20;
-    int space = 10;
+    int space = 12;
     fill(colours[8]); 
     text(mode, location.x+offset, location.y);
+    fill(colours[2]); 
+    text(g.generation, location.x+offset, location.y-3*space);
     fill(colours[8], 120);
     //text(Float.toString(g.energy), location.x+offset, location.y+3*space);
 
@@ -217,7 +219,7 @@ class Creature {
   void age() {
     //my g.energy depletes over time
     if (g.energy > g.minenergy) {
-      g.energy-=0.004;
+      g.energy-=g.agespeed;
     }
     else {
       alive = false;
@@ -228,7 +230,7 @@ class Creature {
   void tire() {
     //my g.energy depletes over time
     if (g.energy > g.minenergy) {
-      g.energy-=0.006;
+      g.energy-=g.tirespeed;
     }
     else {
       alive = false;
@@ -241,27 +243,29 @@ class Creature {
     // for (Creature c:_allCreatures) {
     for (int i = 0; i< _allCreatures.size(); i++) { 
       Creature c = (Creature)_allCreatures.get(i);
-      if (c.alive) {
+
+      //make sure this isn't me
+      if (_allCreatures.indexOf(this) != i) {
         //calculate the distance between me and the other creature - if it's alive
         float distance = PVector.dist(location, c.location);
         // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-        if (getAge(1000) > 20 && distance < 25 && g.energy >100 && c.g.energy >100 && (g.energy+c.g.energy) > 300) { //some sort of sexy distance
+        if (c.alive && getAge(1000) > 20 && distance < 25 && g.energy >100 && c.g.energy >100 && (g.energy+c.g.energy) > 300) { //some sort of sexy distance
           //println(g.energy);
-          //stroke(colours[3]);
-          //strokeWeight(1);
-          //line(location.x, location.y, c.location.x, c.location.y);
-          //mate
-          if (random(1)>0.9995) { //happenstance
+          stroke(colours[3]);
+          strokeWeight(1);
+          line(location.x, location.y, c.location.x, c.location.y);
+          
+          if (random(1)<g.fertility) { //happenstance
             //stroke(colours[1]);
             //strokeWeight(1);
             //line(location.x, location.y, c.location.x, c.location.y);
             //giving birth is tiring
-            this.g.energy-=50;
-            c.g.energy-=50;
+            this.g.energy-=g.reprocost;
+            c.g.energy-=c.g.reprocost;
             println("hey there - let's mate");
             seek(c.location);
             maxspeed = maxspeed/2;
-            mySpecies.makeCreatures(1, location.x, location.y);
+            mySpecies.makeCreatures(1, location.x, location.y, g.generation+c.g.generation);
           }
         }
       }

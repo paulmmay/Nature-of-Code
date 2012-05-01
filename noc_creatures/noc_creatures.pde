@@ -29,7 +29,7 @@ void setup() {
   w = new World(); //create the world and set basic parameters
   w.makeThings(15, false); //make food
   w.makeThings(5, true); //make threats
-  w.makeHerds(2,6);
+  w.makeHerds(1,6);
   debug = true;
   flag = false;
 }

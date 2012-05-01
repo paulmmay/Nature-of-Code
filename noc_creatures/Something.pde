@@ -42,7 +42,7 @@ class Something {
     }
     //regrowth rate
     if (foodSupply < foodLimit) {
-      foodSupply+=0.02;
+      foodSupply+=0.015;
     }
   }
 
