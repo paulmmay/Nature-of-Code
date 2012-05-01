@@ -226,7 +226,7 @@ class Creature {
   void age() {
     //my energy depletes over time
     if (energy > minenergy) {
-      energy-=0.008;
+      energy-=0.002;
     }
     else {
       alive = false;
@@ -237,7 +237,7 @@ class Creature {
   void tire() {
     //my energy depletes over time
     if (energy > minenergy) {
-      energy-=0.025;
+      energy-=0.0025;
     }
     else {
       alive = false;
@@ -247,15 +247,28 @@ class Creature {
 
   void friendly(ArrayList<Creature> _allCreatures) {
     //make a decision based on the locations of the other creatures
-    for (Creature c:_allCreatures) {
-      //calculate the distance between me and the other creature
-      float distance = PVector.dist(location, c.location);
-      // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-      if (distance < 500 && distance > 200) {
-        stroke(colours[1]);
-        strokeWeight(1);
-        line(location.x, location.y, c.location.x, c.location.y);
-        seek(c.location);
+    // for (Creature c:_allCreatures) {
+    for (int i = 0; i< _allCreatures.size(); i++) { 
+      Creature c = (Creature)_allCreatures.get(i);
+      if (c.alive) {
+        //calculate the distance between me and the other creature - if it's alive
+        float distance = PVector.dist(location, c.location);
+        // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
+        if (getAge(1000) > 30 && distance < 50) { //some sort of sexy distance
+          stroke(colours[3]);
+          strokeWeight(1);
+          line(location.x, location.y, c.location.x, c.location.y);
+          //mate
+          if (random(1)>0.9995) { //happenstance
+            stroke(colours[1]);
+            strokeWeight(1);
+            line(location.x, location.y, c.location.x, c.location.y);
+            println("hey there - let's mate");
+            seek(c.location);
+            maxspeed = maxspeed/2;
+            mySpecies.makeCreatures(1, location.x, location.y);
+          }
+        }
       }
     }
   }

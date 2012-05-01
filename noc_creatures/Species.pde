@@ -16,6 +16,7 @@ class Species {
     //pick a random colour for the herd
     int colRand = int(floor(random(possibleColours.length)));
     colour = possibleColours[colRand];
+    println(colour);
   }
 
 

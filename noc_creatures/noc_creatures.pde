@@ -28,14 +28,14 @@ void setup() {
   w = new World(); //create the world and set basic parameters
   w.makeThings(9, false); //make food
   w.makeThings(3, true); //make threats
-  w.makeHerds(2, 10);
+  w.makeHerds(2,6);
   debug = true;
 }
 
 void draw() {
   background(colours[0]);
   w.render(); //render the world
-  //saveFrame("movie/"+sketchname+"_"+"sticktogether"+"####.png");
+  //saveFrame("movie/"+sketchname+"_"+"swarm"+"####.png");
 }
 
 
