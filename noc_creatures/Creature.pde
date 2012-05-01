@@ -253,14 +253,13 @@ class Creature {
           //println(g.energy);
           stroke(colours[3]);
           strokeWeight(1);
-          line(location.x, location.y, c.location.x, c.location.y);
-          
+          if (flag) {
+            line(location.x, location.y, c.location.x, c.location.y);
+          };
+
           if (random(1)<g.fertility) { //happenstance
-            //stroke(colours[1]);
-            //strokeWeight(1);
-            //line(location.x, location.y, c.location.x, c.location.y);
             //giving birth is tiring
-            this.g.energy-=g.reprocost;
+            g.energy-=g.reprocost;
             c.g.energy-=c.g.reprocost;
             println("hey there - let's mate");
             seek(c.location);
