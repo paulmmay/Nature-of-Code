@@ -23,24 +23,20 @@ class Creature {
   ArrayList<Something> knownThreats = new ArrayList();
   ArrayList<Something> knownFoods = new ArrayList();
   //health
-  float energy, water, mass, maxenergy, lifespan; //how much energy do i have
+  Gene g;
+  
   int h = 9;
   //birthday and age and lifespan
   //attributes - these should be from species?
   float maxspeed = 0; //can we change this based on how much feeding the creature has done?
   float maxforce = 0; //
   //speeds and forces based on current state
-  float wander_maxspeed = 2;
-  float wander_maxforce = 0.3;
-  float flee_maxspeed = 10;
-  float flee_maxforce = 2;
-  float minenergy = 10;
   float calculatedMaxSpeed = 0;
   int birthday;
   float calculatedMaxForce = 0;
   Species mySpecies;
 
-  //speeds should be a factor of my age and energy
+  //speeds should be a factor of my age and g.energy
 
   float wandertheta;
   String mode;
@@ -55,16 +51,14 @@ class Creature {
   /* ---------------- CONSTRUCTOR---------------------- */
 
   Creature(float _x, float _y, Species _s) {
+    g = new Gene();
     mySpecies = _s;
     println(this+ " Hi, I'm a creature");
     location = new PVector(_x, _y);
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
     //set up basic parameters / reset
-    energy = 100;
-    maxenergy = 100; //what is the most energy I can have? 
-    water = 100;
-    mass = 100;
+
     report();
     mode = "w";
     println(mySpecies);
@@ -84,13 +78,12 @@ class Creature {
     if (debug) {
       println(this+" (Creature)"+
         " age:"+getAge(1000)+
-        ", energy:"+energy+
-        ", water:"+water);
+        ", g.energy:"+g.energy);
     }
   }
 
   void update() {
-    calculatedMaxSpeed = maxspeed*energy/200;
+    calculatedMaxSpeed = maxspeed*g.energy/200;
     //  println(calculatedMaxSpeed);
 
     velocity.add(acceleration);
@@ -110,7 +103,7 @@ class Creature {
     fill(colours[8]); 
     text(mode, location.x+offset, location.y);
     fill(colours[8], 120);
-    //text(Float.toString(energy), location.x+offset, location.y+3*space);
+    //text(Float.toString(g.energy), location.x+offset, location.y+3*space);
 
 
     String threatChit = "";
@@ -144,7 +137,7 @@ class Creature {
       pushMatrix();
       translate(location.x, location.y);
       int myAge = getAge(10);
-      float r = energy/25;
+      float r = g.energy/25;
       if (r>=7) {
         r=7;
       }
@@ -172,7 +165,7 @@ class Creature {
    better wandering
    reproduction 
    
-   next: tie speed and agility to energy level
+   next: tie speed and agility to g.energy level
    */
 
   void applyForce(PVector force) {
@@ -222,9 +215,9 @@ class Creature {
   }
 
   void age() {
-    //my energy depletes over time
-    if (energy > minenergy) {
-      energy-=0.004;
+    //my g.energy depletes over time
+    if (g.energy > g.minenergy) {
+      g.energy-=0.004;
     }
     else {
       alive = false;
@@ -233,9 +226,9 @@ class Creature {
   }
 
   void tire() {
-    //my energy depletes over time
-    if (energy > minenergy) {
-      energy-=0.006;
+    //my g.energy depletes over time
+    if (g.energy > g.minenergy) {
+      g.energy-=0.006;
     }
     else {
       alive = false;
@@ -252,8 +245,8 @@ class Creature {
         //calculate the distance between me and the other creature - if it's alive
         float distance = PVector.dist(location, c.location);
         // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-        if (getAge(1000) > 20 && distance < 25 && energy >100 && c.energy >100 && (energy+c.energy) > 300) { //some sort of sexy distance
-          //println(energy);
+        if (getAge(1000) > 20 && distance < 25 && g.energy >100 && c.g.energy >100 && (g.energy+c.g.energy) > 300) { //some sort of sexy distance
+          //println(g.energy);
           //stroke(colours[3]);
           //strokeWeight(1);
           //line(location.x, location.y, c.location.x, c.location.y);
@@ -263,8 +256,8 @@ class Creature {
             //strokeWeight(1);
             //line(location.x, location.y, c.location.x, c.location.y);
             //giving birth is tiring
-            this.energy-=50;
-            c.energy-=50;
+            this.g.energy-=50;
+            c.g.energy-=50;
             println("hey there - let's mate");
             seek(c.location);
             maxspeed = maxspeed/2;
@@ -281,8 +274,8 @@ class Creature {
     fleeing = false;
     if (wander == true && fleeing == false) {
       //wander
-      maxspeed = wander_maxspeed;
-      maxforce = wander_maxforce;
+      maxspeed = g.wander_maxspeed;
+      maxforce = g.wander_maxforce;
 
       mode = "w";
       float wanderR = 10;         // Radius for our "wander circle"
@@ -346,7 +339,7 @@ class Creature {
     //distance from all things
     for (Something s:_allThings) { //check dist to each thing - awareness
       float targetDistance = dist(location.x, location.y, s.location.x, s.location.y);
-      if (targetDistance < 50 && s.active == true) { //outer threshold
+      if (targetDistance < g.visiondistance && s.active == true) { //outer threshold
         if (targetDistance < recordDistance) {
           //println("record distance is now "+recordDistance);
           recordDistance = targetDistance;
@@ -357,7 +350,7 @@ class Creature {
       // if you find something that is the closest
       // do all the stuff you need to do
       if (whichThing != null) {
-        if (targetDistance < 50 && targetDistance > 20 && !knownThreats.contains(whichThing)) { //within sight but not at arrive
+        if (targetDistance < g.visiondistance && targetDistance > 20 && !knownThreats.contains(whichThing)) { //within sight but not at arrive
           /*
           //draw a line between me and the thing i seek. very handy to see the changes in creatures' range of vision
            strokeWeight(1);
@@ -373,16 +366,16 @@ class Creature {
             knownFoods.add(whichThing);
           }
           arrive(whichThing.location);
-          energy+=whichThing.deplete();
+          g.energy+=whichThing.deplete();
           //println("feeding");
         }
 
         //it's a threat - i already know about it or I can see it up close
         else if ((targetDistance < 50 && knownThreats.contains(whichThing)) || (targetDistance <= 20 && whichThing.threat == true)) {
           //fleeing = true;
-          energy = whichThing.injur(energy);
-          maxspeed = flee_maxspeed;
-          maxforce = flee_maxforce;
+          g.energy = whichThing.injur(g.energy);
+          maxspeed = g.flee_maxspeed;
+          maxforce = g.flee_maxforce;
           mode = "!";
           if (!knownThreats.contains(whichThing)) {
             knownThreats.add(whichThing);
