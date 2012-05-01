@@ -274,7 +274,8 @@ class Creature {
 
 
           if (calculateFitness(g, c.g)) { //if the parents have sufficient energy
-            if (random(1)<0.1) { //there is a one in a hundred chance
+           // if (random(1)<0.01) { //there is about a one in a hundred chance
+             if (random(1)<0.05) { //there is about a one in twenty chance
               println("hey there - let's mate");
               seek(c.location);
               Gene n = combine(g, c.g);
@@ -293,7 +294,6 @@ class Creature {
     //could look at age
     //could look at ability to find food
     if ((_g.energy+_cg.energy/2) >150) {
-      println(_g.energy+_cg.energy);
       return true;
     }
     else {
