@@ -130,12 +130,7 @@ class Creature {
 
 
   void render() {
-    float r = energy/20;
 
-    //max for r? cap at 7 hacky
-    if (r>7) {
-      r = 7.0;
-    }
 
     if (debug) {
       //draw the trangular creature boid 
@@ -143,19 +138,17 @@ class Creature {
       endShape();
       // Draw a triangle rotated in the direction of velocity
       float theta = velocity.heading2D() + PI/2;
-
       //flag
       //flag();
       noStroke();
       pushMatrix();
       translate(location.x, location.y);
-      int myAge = getAge(1000);
-      if (myAge>=12) {
-        fill(mySpecies.colour);
+      int myAge = getAge(10);
+      float r = energy/25;
+      if (r>=7) {
+        r=7;
       }
-      else {
-        fill(mySpecies.colour,100+myAge*10);
-      };
+      fill(mySpecies.colour);
       rotate(theta);
       beginShape();
       vertex(0, -r*2);
@@ -259,7 +252,7 @@ class Creature {
         //calculate the distance between me and the other creature - if it's alive
         float distance = PVector.dist(location, c.location);
         // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-        if (getAge(1000) > 30 && distance < 25 && (energy+c.energy) > 300) { //some sort of sexy distance
+        if (getAge(1000) > 20 && distance < 25 && energy >100 && c.energy >100 && (energy+c.energy) > 300) { //some sort of sexy distance
           //println(energy);
           //stroke(colours[3]);
           //strokeWeight(1);
@@ -269,6 +262,9 @@ class Creature {
             //stroke(colours[1]);
             //strokeWeight(1);
             //line(location.x, location.y, c.location.x, c.location.y);
+            //giving birth is tiring
+            this.energy-=50;
+            c.energy-=50;
             println("hey there - let's mate");
             seek(c.location);
             maxspeed = maxspeed/2;
