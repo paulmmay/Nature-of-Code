@@ -272,15 +272,15 @@ class Creature {
             line(location.x, location.y, c.location.x, c.location.y);
           };
 
-          if (random(1)<g.fertility) { //happenstance - replace with a better fitness function
-            if (calculateFitness(g, c.g)) { //
-              //giving birth is tiring
-              g.energy-=g.reprocost;
-              c.g.energy-=c.g.reprocost;
+
+          if (calculateFitness(g, c.g)) { //if the parents have sufficient energy
+            if (random(1)<0.1) { //there is a one in a hundred chance
               println("hey there - let's mate");
               seek(c.location);
               Gene n = combine(g, c.g);
-              mySpecies.makeCreatures(1, location.x, location.y, n);
+              mySpecies.makeCreatures(1, location.x, location.y, n); //that a new creature will be created                       
+              g.energy-=g.reprocost; //and giving birth is tiring
+              c.g.energy-=c.g.reprocost;
             }
           }
         }
@@ -292,7 +292,8 @@ class Creature {
   boolean calculateFitness(Gene _g, Gene _cg) {
     //could look at age
     //could look at ability to find food
-    if (_g.energy >100 && _cg.energy >100 && (_g.energy+_cg.energy) > 300) {
+    if ((_g.energy+_cg.energy/2) >150) {
+      println(_g.energy+_cg.energy);
       return true;
     }
     else {
