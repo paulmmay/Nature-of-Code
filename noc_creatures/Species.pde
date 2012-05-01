@@ -6,7 +6,7 @@ class Species {
   //colour
   //speed
   color[] possibleColours = {
-    #9BD49D, #F6BA40, #DD5F22, #BF282D, #3C7B37, #42445D, #498A3E, #66C256,#C0CC8B,#E6E4CC,#C4B0C3,#E3D265,#5A8991,#E65A65
+    #9BD49D, #F6BA40, #DD5F22, #BF282D, #3C7B37, #42445D, #498A3E, #66C256,#C0CC8B,#C4B0C3,#5A8991,#E65A65
   };
 
 

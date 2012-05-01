@@ -276,19 +276,15 @@ class Creature {
       //wander
       maxspeed = g.wander_maxspeed;
       maxforce = g.wander_maxforce;
-
       mode = "w";
-      float wanderR = 10;         // Radius for our "wander circle"
-      float wanderD = 50;         // Distance for our "wander circle"
-      float change = 0.008; //very interesting - tie this to a gene?
-      wandertheta += random(-change, change);     // Randomly change wander theta
+      wandertheta += random(-g.change, g.change);     // Randomly change wander theta
       // Now we have to calculate the new location to steer towards on the wander circle
       PVector circleloc = velocity.get();    // Start with velocity
       circleloc.normalize();            // Normalize to get heading
-      circleloc.mult(wanderD);          // Multiply by distance
+      circleloc.mult(g.wanderD);          // Multiply by distance
       circleloc.add(location);               // Make it relative to boid's location
       float h = velocity.heading2D();        // We need to know the heading to offset wandertheta
-      PVector circleOffSet = new PVector(wanderR*cos(wandertheta+h), wanderR*sin(wandertheta+h));
+      PVector circleOffSet = new PVector(g.wanderR*cos(wandertheta+h), g.wanderR*sin(wandertheta+h));
       PVector target = PVector.add(circleloc, circleOffSet);
       //println("wander");
       seek(target);
