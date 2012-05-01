@@ -27,5 +27,13 @@ class Species {
       allCreatures.add(c);
     }
   }
+
+  void makeCreatures(int _creatures, float _x, float _y, Gene _n) {
+    //make a group of creatures with a number of creatures
+    for (int i=0;i<=_creatures-1;i++) {
+      Creature c = new Creature(_x, _y, _n, this);
+      allCreatures.add(c);
+    }
+  }
 }
 

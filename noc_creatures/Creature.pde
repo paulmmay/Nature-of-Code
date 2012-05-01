@@ -58,7 +58,22 @@ class Creature {
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
     //set up basic parameters / reset
+    report();
+    mode = "w";
+    println(mySpecies);
+    birthday = millis();
+    //println(birthday);
+  }
 
+  // a constructor where we're given a gene
+  Creature(float _x, float _y, Gene _n, Species _s) {
+    g = _n;
+    mySpecies = _s;
+    println(this+ " Hi, I'm a creature");
+    location = new PVector(_x, _y);
+    acceleration = new PVector(0, 0);
+    velocity = new PVector(0, 0);
+    //set up basic parameters / reset
     report();
     mode = "w";
     println(mySpecies);
@@ -249,26 +264,63 @@ class Creature {
         //calculate the distance between me and the other creature - if it's alive
         float distance = PVector.dist(location, c.location);
         // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-        if (c.alive && getAge(1000) > 20 && distance < 25 && g.energy >100 && c.g.energy >100 && (g.energy+c.g.energy) > 300) { //some sort of sexy distance
-          //println(g.energy);
-          stroke(colours[3]);
-          strokeWeight(1);
+        if (c.alive && getAge(1000) > 20 && distance < 25) { //some sort of sexy distance
           if (flag) {
+            stroke(colours[3]);
+            strokeWeight(1);
             line(location.x, location.y, c.location.x, c.location.y);
           };
 
-          if (random(1)<g.fertility) { //happenstance
-            //giving birth is tiring
-            g.energy-=g.reprocost;
-            c.g.energy-=c.g.reprocost;
-            println("hey there - let's mate");
-            seek(c.location);
-            maxspeed = maxspeed/2;
-            mySpecies.makeCreatures(1, location.x, location.y, g.generation+c.g.generation);
+          if (random(1)<g.fertility) { //happenstance - replace with a better fitness function
+            if (calculateFitness(g, c.g)) { //
+              //giving birth is tiring
+              g.energy-=g.reprocost;
+              c.g.energy-=c.g.reprocost;
+              println("hey there - let's mate");
+              seek(c.location);
+              Gene n = combine(g, c.g);
+              mySpecies.makeCreatures(1, location.x, location.y, n);
+            }
           }
         }
       }
     }
+  }
+
+
+  boolean calculateFitness(Gene _g, Gene _cg) {
+    //could look at age
+    //could look at ability to find food
+    if (_g.energy >100 && _cg.energy >100 && (_g.energy+_cg.energy) > 300) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  Gene combine(Gene _x, Gene _y) {
+    Gene n = new Gene();
+    n.energy = (_x.energy+_y.energy)/2;
+    n.maxenergy= (_x.energy+_y.energy)/2;
+    n.lifespan= (_x.lifespan+_y.lifespan)/2;
+    n.wander_maxspeed= (_x.wander_maxspeed+_y.wander_maxspeed)/2;
+    n.wander_maxforce= (_x.wander_maxforce+_y.wander_maxforce)/2;
+    n.flee_maxspeed= (_x.flee_maxspeed+_y.flee_maxspeed)/2;
+    n.flee_maxforce= (_x.flee_maxforce+_y.flee_maxforce)/2;
+    n.minenergy= (_x.minenergy+_y.minenergy)/2;
+    n.farvisiondistance= (_x.farvisiondistance+_y.farvisiondistance)/2;
+    n.nearvisiondistance= (_x.nearvisiondistance+_y.nearvisiondistance)/2;
+    n.agespeed= (_x.agespeed+_y.agespeed)/2;
+    n.tirespeed= (_x.tirespeed+_y.tirespeed)/2;
+    n.wanderR= (_x.wanderR+_y.wanderR)/2;
+    n.wanderD= (_x.wanderD+_y.wanderD)/2;
+    n.change= (_x.change+_y.change)/2;
+    n.reprocost= (_x.reprocost+_y.reprocost)/2;
+    n.fertility= (_x.fertility+_y.fertility)/2;
+    n.generation = _x.generation+_y.generation;
+    //n = mutate(n);
+    return n;
   }
 
   void wander() {
