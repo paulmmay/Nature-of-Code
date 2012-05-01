@@ -29,7 +29,7 @@ void setup() {
   w = new World(); //create the world and set basic parameters
   w.makeThings(10, false); //make food
   w.makeThings(5, true); //make threats
-  w.makeHerds(1,8);
+  w.makeHerds(3,6);
   debug = true;
   flag = false;
 }
@@ -57,4 +57,4 @@ void screenShot() {
   save("screenshots/"+d.toString()+"_"+sketchname+".png");
 }
 
-
+//do you have a favourite pixel
