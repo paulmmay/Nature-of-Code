@@ -69,7 +69,7 @@ class Creature {
     mode = "w";
     println(mySpecies);
     birthday = millis();
-    println(birthday);
+    //println(birthday);
   }
 
   /* ---------------- ADMIN FUNCTIONS ---------------------- */
@@ -154,7 +154,7 @@ class Creature {
         fill(mySpecies.colour);
       }
       else {
-        fill(mySpecies.colour,30+myAge*20);
+        fill(mySpecies.colour,100+myAge*10);
       };
       rotate(theta);
       beginShape();
@@ -259,7 +259,7 @@ class Creature {
         //calculate the distance between me and the other creature - if it's alive
         float distance = PVector.dist(location, c.location);
         // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-        if (getAge(1000) > 30 && distance < 50 && (energy+c.energy) > 250) { //some sort of sexy distance
+        if (getAge(1000) > 30 && distance < 25 && (energy+c.energy) > 300) { //some sort of sexy distance
           //println(energy);
           //stroke(colours[3]);
           //strokeWeight(1);

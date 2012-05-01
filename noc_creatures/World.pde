@@ -59,11 +59,14 @@ class World {
     for (Species h:allHerds) {
       //for (Creature c:h.allCreatures) { //for each herd, each creature in the herd
       for (int i = 0; i< h.allCreatures.size(); i++) { 
-      Creature c = (Creature)h.allCreatures.get(i);
+        Creature c = (Creature)h.allCreatures.get(i);
         if (c.alive == true) { //creatures can die, when they do - don't show them anymore
           c.update();
           c.age();
           c.render();
+          if (flag) {
+            c.flag();
+          }
           c.wander();
           c.boundaries();
           c.decide(allThings);

@@ -12,6 +12,7 @@
 String sketchname = "creatures";
 
 boolean debug;
+boolean flag;
 color[] colours = {
   #F2f2f2, #ADDAEA, #cccccc, #FAFAFA, #6F0D0D, #E8E8E8, #B0D748, #DB4050, #222222
 };
@@ -30,6 +31,7 @@ void setup() {
   w.makeThings(3, true); //make threats
   w.makeHerds(2,6);
   debug = true;
+  flag = false;
 }
 
 void draw() {
@@ -46,7 +48,7 @@ void keyPressed() {
 }
 
 void mousePressed(){
-w.makeHerds(1, 1);
+flag = !flag;
 }
 
 void screenShot() {
