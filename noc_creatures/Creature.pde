@@ -299,20 +299,20 @@ class Creature {
     //there must less verbose way of doing this - like distance from the center or something?
     PVector desired = null;
 
-    if (location.x < 20) {
+    if (location.x < g.nearvisiondistance) {
       mode = "!";
       desired = new PVector(calculatedMaxSpeed, velocity.y);
     } 
-    else if (location.x > width - 20) {
+    else if (location.x > width - g.nearvisiondistance) {
       mode = "!";
       desired = new PVector(-calculatedMaxSpeed, velocity.y);
     } 
 
-    if (location.y < 20) {
+    if (location.y < g.nearvisiondistance) {
       mode = "!";
       desired = new PVector(velocity.x, maxspeed);
     } 
-    else if (location.y > height- 20) {
+    else if (location.y > height- g.nearvisiondistance) {
       mode = "!";
       desired = new PVector(velocity.x, -maxspeed);
     } 
@@ -339,7 +339,7 @@ class Creature {
     //distance from all things
     for (Something s:_allThings) { //check dist to each thing - awareness
       float targetDistance = dist(location.x, location.y, s.location.x, s.location.y);
-      if (targetDistance < g.visiondistance && s.active == true) { //outer threshold
+      if (targetDistance < g.farvisiondistance && s.active == true) { //outer threshold
         if (targetDistance < recordDistance) {
           //println("record distance is now "+recordDistance);
           recordDistance = targetDistance;
@@ -350,7 +350,7 @@ class Creature {
       // if you find something that is the closest
       // do all the stuff you need to do
       if (whichThing != null) {
-        if (targetDistance < g.visiondistance && targetDistance > 20 && !knownThreats.contains(whichThing)) { //within sight but not at arrive
+        if (targetDistance < g.farvisiondistance && targetDistance > g.nearvisiondistance && !knownThreats.contains(whichThing)) { //within sight but not at arrive
           /*
           //draw a line between me and the thing i seek. very handy to see the changes in creatures' range of vision
            strokeWeight(1);
@@ -360,7 +360,7 @@ class Creature {
           //when else should I seek? when I am hungry
         }
         //it's food
-        if (targetDistance <= 20 && whichThing.threat ==false) {
+        if (targetDistance <= g.nearvisiondistance && whichThing.threat ==false) {
           mode = "f";
           if (!knownFoods.contains(whichThing)) {
             knownFoods.add(whichThing);
@@ -371,7 +371,7 @@ class Creature {
         }
 
         //it's a threat - i already know about it or I can see it up close
-        else if ((targetDistance < 50 && knownThreats.contains(whichThing)) || (targetDistance <= 20 && whichThing.threat == true)) {
+        else if ((targetDistance < g.farvisiondistance && knownThreats.contains(whichThing)) || (targetDistance <= g.nearvisiondistance && whichThing.threat == true)) {
           //fleeing = true;
           g.energy = whichThing.injur(g.energy);
           maxspeed = g.flee_maxspeed;
