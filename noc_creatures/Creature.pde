@@ -233,6 +233,7 @@ class Creature {
 
   void age() {
     //my g.energy depletes over time
+    //this needs to actually kill the creature - need to decouple age and energy
     if (g.energy > g.minenergy) {
       g.energy-=g.agespeed;
     }
