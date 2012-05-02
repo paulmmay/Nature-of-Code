@@ -37,7 +37,7 @@ void setup() {
 void draw() {
   background(colours[0]);
   w.render(); //render the world
-  //saveFrame("movie/"+sketchname+"_"+"breeding"+"####.png");
+  saveFrame("movie/"+sketchname+"_"+"reproduction"+"####.png");
 }
 
 

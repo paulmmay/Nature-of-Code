@@ -153,7 +153,14 @@ class Creature {
       noStroke();
       pushMatrix();
       translate(location.x, location.y);
-      int myAge = getAge(10);
+      int myAge = getAge(1000);
+      if(flag && myAge <= 10 && g.generation > 1) {
+        noFill();
+        stroke(colours[2],100);
+        strokeWeight(1);
+        ellipse(0, 0, 35, 35);
+      }
+      noStroke();
       float r = g.energy/25;
       if (r>=7) {
         r=7;
@@ -274,8 +281,8 @@ class Creature {
 
 
           if (calculateFitness(g, c.g)) { //if the parents have sufficient energy
-           // if (random(1)<0.01) { //there is about a one in a hundred chance
-             if (random(1)<0.05) { //there is about a one in twenty chance
+            // if (random(1)<0.01) { //there is about a one in a hundred chance
+            if (random(1)<0.05) { //there is about a one in twenty chance
               println("hey there - let's mate");
               seek(c.location);
               Gene n = combine(g, c.g);
