@@ -2,9 +2,9 @@ class World {
 
   //has species
   ArrayList<Species> allHerds = new ArrayList();
-
   //has terrain, some of it edible
   ArrayList<Something> allThings = new ArrayList();
+  Information i = new Information();
   PFont font = loadFont("HelveticaNeue-Medium-12.vlw"); 
   //has weather
 
@@ -51,9 +51,13 @@ class World {
 
   void render() {
     int total = 0;
+    int totalfood = 0;
     //draw the objects in our world - food, threats etc.
     for (Something s:allThings) {
       s.render();
+      if(s.threat==false){
+       totalfood+=s.foodSupply;
+      }
     }
     //pass all the objects to all the creatures - right approach?
     for (Species h:allHerds) {
@@ -61,6 +65,7 @@ class World {
       for (int i = 0; i< h.allCreatures.size(); i++) { 
         Creature c = (Creature)h.allCreatures.get(i);
         if (c.alive == true) { //creatures can die, when they do - don't show them anymore
+          total++;
           c.update();
           c.age();
           c.render();
@@ -74,6 +79,7 @@ class World {
         }
       }
     }
+    i.render(total, totalfood, 0);
   }
 }
 

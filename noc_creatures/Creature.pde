@@ -154,10 +154,11 @@ class Creature {
       pushMatrix();
       translate(location.x, location.y);
       int myAge = getAge(1000);
-      if(flag && myAge <= 10 && g.generation > 1) {
+      //if (flag && myAge <= 10 && g.generation > 1) {
+      if (myAge <= 10 && g.generation > 1) {
         noFill();
-        stroke(colours[2],100);
-        strokeWeight(1);
+        stroke(colours[9], 100);
+        strokeWeight(3);
         ellipse(0, 0, 35, 35);
       }
       noStroke();
