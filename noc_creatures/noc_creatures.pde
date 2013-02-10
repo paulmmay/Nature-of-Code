@@ -1,7 +1,7 @@
 /*
 
  Creatures
- A little world of creatures and food and weather
+ A little world of creatures and food and threats
  
  Paul May
  ITP 2012
@@ -27,12 +27,12 @@ void setup() {
   font = loadFont("HelveticaNeue-Medium-12.vlw");
   bigfont = loadFont("HelveticaNeue-24.vlw");
   //size(1920, 1080); //FHD
-  size(1360, 768); //HD
-  //size(1280,720); //720p
+  //size(1360, 768); //HD
+  size(1280,720); //720p
   //size(1093, 614); //QFHD
   smooth();
   w = new World(); //create the world and set basic parameters
-  w.makeThings(20, false); //make food
+  w.makeThings(15, false); //make food
   w.makeThings(20, true); //make threats
   w.makeHerds(5, 20);
   debug = true;
@@ -42,7 +42,7 @@ void setup() {
 void draw() {
   background(colours[0]);
   w.render(); //render the world
-  //saveFrame("movie/"+sketchname+"_"+"reproduction"+"####.png");
+  saveFrame("movie/"+sketchname+"_"+"reproduction"+"####.png");
 }
 
 
